@@ -1,0 +1,17 @@
+{
+  "name": "gat-sport-auth-site",
+  "version": "1.0.0",
+  "description": "GAT Sport Product Authentication Site (static + serverless)",
+  "private": true,
+  "scripts": {
+    "build": "echo 'No build step required'",
+    "start": "echo 'Serve /public statically on your platform; serverless functions live under /api'"
+  },
+  "keywords": ["authentication", "product-verification", "gat-sport"],
+  "author": "GAT Sport",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

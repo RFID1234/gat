@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GAT Sport Homepage</title>
+  <style>
+    body { margin: 0; font-family: Montserrat, Arial, sans-serif; color: #0b2141; background: #ffffff; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    header { padding: 10px 0 20px; border-bottom: 1px solid #e5e7eb; margin-bottom: 20px; }
+    h1 { font-size: 28px; margin: 0; }
+    .notice { background: #f3f6fb; border: 1px solid #dee6f5; padding: 12px 14px; border-radius: 8px; color: #134083; margin-bottom: 16px; }
+    .content { width: 100%; }
+    img { max-width: 100%; height: auto; }
+    iframe { max-width: 100%; border: 0; }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div id="injected-content"></div>
+
+  <script>
+    (async function loadSnippet() {
+      const status = document.getElementById('status');
+      const target = document.getElementById('injected-content');
+      try {
+        const res = await fetch('/gat-homepage-snippet.html', { cache: 'no-store' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const htmlText = await res.text();
+
+        // Try to detect if full HTML document
+        const hasHtmlTag = /<\s*html[\s>]/i.test(htmlText);
+        const hasBodyTag = /<\s*body[\s>]/i.test(htmlText);
+
+        if (hasHtmlTag || hasBodyTag) {
+          // Replace entire document with provided doc
+          const doc = new DOMParser().parseFromString(htmlText, 'text/html');
+
+          // Add base for relative URLs
+          const ensureBase = () => {
+            const existingBase = doc.head.querySelector('base');
+            if (!existingBase) {
+              const base = doc.createElement('base');
+              base.setAttribute('href', 'https://gatsport.com/');
+              doc.head.insertBefore(base, doc.head.firstChild);
+            }
+          };
+          ensureBase();
+
+          // Replace head
+          document.head.innerHTML = '';
+          Array.from(doc.head.childNodes).forEach(node => {
+            document.head.appendChild(document.importNode(node, true));
+          });
+
+          // Replace body
+          document.body.innerHTML = '';
+          Array.from(doc.body.childNodes).forEach(node => {
+            if (node.tagName === 'SCRIPT') {
+              const s = document.createElement('script');
+              Array.from(node.attributes).forEach(a => s.setAttribute(a.name, a.value));
+              s.textContent = node.textContent || '';
+              document.body.appendChild(s);
+            } else {
+              document.body.appendChild(document.importNode(node, true));
+            }
+          });
+
+          const st = document.getElementById('status');
+          if (st) st.classList.add('hidden');
+          return;
+        }
+
+        // Otherwise, treat as snippet
+        target.innerHTML = htmlText;
+        const scripts = target.querySelectorAll('script');
+        scripts.forEach(old => {
+          const s = document.createElement('script');
+          Array.from(old.attributes).forEach(a => s.setAttribute(a.name, a.value));
+          s.textContent = old.textContent || '';
+          old.replaceWith(s);
+        });
+        status.textContent = 'Loaded.';
+        setTimeout(() => status.classList.add('hidden'), 600);
+      } catch (err) {
+        console.error('Failed to load snippet', err);
+        if (status) status.textContent = 'Failed to load GAT Sport homepage.';
+      }
+    })();
+  </script>
+</body>
+</html>

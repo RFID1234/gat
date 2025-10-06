@@ -1,0 +1,61 @@
+{
+  "product_id": "597957142729",
+  "seed": 153917949,
+  "colors": [
+    "#1EF1F2",
+    "#DC4FDD",
+    "#F6FA31"
+  ],
+  "shape_types": [
+    "leaf",
+    "arc",
+    "loop"
+  ],
+  "size": 800,
+  "per_shape": [
+    {
+      "index": 0,
+      "color": "#1EF1F2",
+      "shape": "leaf",
+      "center": [
+        -0.21619064950411007,
+        0.3471119335805536
+      ],
+      "amp": 0.1947040195119113,
+      "phase": 5.15888507854324,
+      "lobes": 2,
+      "density": 18,
+      "scale": 1.1166550565933797,
+      "leaf_type": "heart_polar_r=1-sin(theta+phase)"
+    },
+    {
+      "index": 1,
+      "color": "#DC4FDD",
+      "shape": "arc",
+      "center": [
+        0.26908282857754606,
+        0.012628374973591427
+      ],
+      "amp": 0.22710483907966778,
+      "phase": 5.156676844487365,
+      "lobes": 4,
+      "density": 32,
+      "scale": 0.9155065706272396
+    },
+    {
+      "index": 2,
+      "color": "#F6FA31",
+      "shape": "loop",
+      "center": [
+        -0.28800489736840656,
+        0.3443598038651179
+      ],
+      "amp": 0.2707767088819204,
+      "phase": 4.437512833535765,
+      "lobes": 4,
+      "density": 32,
+      "scale": 1.1996375285331897,
+      "loop_exponent": 2.5
+    }
+  ]
+}
