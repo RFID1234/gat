@@ -1,17 +1,18 @@
 [build]
   publish = "public"
   functions = "netlify/functions"
+  command = ""
+
+[functions]
+  directory = "netlify/functions"
+
+[dev]
+  publish = "public"
 
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
   status = 200
-
-# QR legacy path
-[[redirects]]
-  from = "/GS26/QR"
-  to = "/.netlify/functions/qr"
-  status = 302
 
 # Catch-all for product code paths to SPA
 [[redirects]]
