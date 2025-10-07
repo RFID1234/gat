@@ -239,7 +239,7 @@ async function verifyProduct(verifyBtn) {
         // Build product object, preferring manifest data; fallback to R2 direct URL
         const product = {
             code: currentProductCode,
-            imageUrl: (entry && (entry.imageUrl || entry.image_url)) || buildImageUrl(currentProductCode),
+            imageUrl: buildImageUrl(currentProductCode),
             name: (entry && entry.name) || 'GAT Sport Product',
             description: (entry && entry.description) || 'Authentic GAT Sport supplement'
         };
