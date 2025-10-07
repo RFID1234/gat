@@ -469,4 +469,25 @@
    
    /* Final minor production helper (keep root colors accessible) */
    :root { --primary: var(--gat-blue); }
+
+/* ===== Fix: force-centered underline (override conflicting 100vw rules) ===== */
+.section_banner .code-underline,
+.section_banner > .code-underline {
+  position: relative !important;
+  width: min(88vw, 1300px) !important;
+  max-width: 100% !important;
+  margin: 12px auto 18px !important;
+  left: auto !important;
+  transform: none !important;
+  box-sizing: border-box !important;
+}
+
+/* optional: full-bleed underline when explicitly needed */
+.section_banner .code-underline--full {
+  width: 100vw !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  margin: 12px 0 !important;
+}
+
    
