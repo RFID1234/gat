@@ -51,7 +51,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   // Get product code from either URL path (/CODE) or ?c=CODE
   const pathPart = (location.pathname || '/').replace(/^\//, '');
   const urlParams = new URLSearchParams(window.location.search);
-  let codeFromPath = pathPart && !pathPart.includes('/') ? pathPart : '';
+  let codeFromPath = '';
+    if (pathPart && !pathPart.includes('/') && !pathPart.startsWith('GS26/QR')) {
+    codeFromPath = pathPart;
+    }
   let codeFromQuery = (urlParams.get('c') || '').trim();
   const autoVerify = (urlParams.get('auto') || '') === '1';
   currentProductCode = (codeFromPath || codeFromQuery || '').trim();
