@@ -213,22 +213,29 @@ function renderInlineError(message) {
   }
   smoothScrollToResults();
     // --- reveal hidden sections after successful verification ---
-    try {
-        const heroUnderline = document.querySelector('.section_banner .code-underline');
-        if (heroUnderline) heroUnderline.style.display = 'none';
-    
-        const section1 = document.getElementById('section_utility1');
-        if (section1) section1.style.display = 'block';
-    
-        const section2 = document.getElementById('section_utility2');
-        if (section2) section2.style.display = 'block';
-    
-        document.querySelectorAll('.preverify-hidden').forEach(el => {
-          el.style.display = 'block';
-        });
-      } catch (e) {
-        console.warn('Reveal helper error:', e);
-      }    
+
+      // --- robust reveal helpers (ensure hidden sections show after success) ---
+  try {
+    console.log('revealHelper: start');
+
+    // hide hero underline (optional)
+    const heroUnderline = document.querySelector('.section_banner .code-underline');
+    if (heroUnderline) heroUnderline.style.display = 'none';
+
+    // force show known sections & preverify wrappers (use !important)
+    const toReveal = Array.from(document.querySelectorAll('#section_utility1, #section_utility2, .preverify-hidden'));
+    toReveal.forEach(el => {
+      el.style.setProperty('display', 'block', 'important');
+      el.style.setProperty('visibility', 'visible', 'important');
+      el.style.setProperty('opacity', '1', 'important');
+      el.removeAttribute('hidden');
+    });
+
+    console.log('revealHelper: done, revealed =', toReveal.length);
+  } catch (e) {
+    console.warn('Reveal helper error:', e);
+  }
+
 }
 
 // ============================================================
