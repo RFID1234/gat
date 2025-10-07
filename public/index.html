@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="robots" content="noindex">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <head>
+        <meta charset="utf-8">
+        <meta name="robots" content="noindex">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        
+        <title>GAT Sport</title> 
     
-    <title>GAT Sport</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
+        <!-- Favicon: transparent home icon (no background) -->
+        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 4.2 3 11h2v9h5v-6h4v6h5v-9h2L12 4.2z' fill='%231a2a3a'/%3E%3Crect x='7' y='6' width='2' height='3' fill='%231a2a3a'/%3E%3C/svg%3E">
+    
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <!-- Load Oswald Regular 400 for hero area test -->
+        <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    
 <body data-spy="scroll" data-target="#navbar_main" data-offset="80">
     <div class="preloader active" style="display: none;">
         <img class="preloader__spinner" alt="Loading..." src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 38 38'%3E%3Cdefs%3E%3ClinearGradient x1='8.042%' y1='0%' x2='65.682%' y2='23.865%' id='a'%3E%3Cstop stop-color='%23fff' stop-opacity='0' offset='0%'/%3E%3Cstop stop-color='%23007bff' stop-opacity='.631' offset='63.146%'/%3E%3Cstop stop-color='%23007bff' offset='100%'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg transform='translate(1 1)' stroke='url(%23a)' stroke-width='2'%3E%3Ccircle stroke-opacity='.5' cx='18' cy='18' r='18'/%3E%3Cpath d='M36 18c0-9.94-8.06-18-18-18'%3E%3CanimateTransform attributeName='transform' type='rotate' from='0 18 18' to='360 18 18' dur='0.9s' repeatCount='indefinite'/%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/svg%3E" />
@@ -53,6 +59,7 @@
                                 </div>
                                 <form id="authform" class="authform" novalidate="novalidate">
                                     <div class="text-center bigtext" id="productCodeDisplay"></div>
+                                    <div class="code-underline"></div>
                                     <input id="Code" name="Code" type="hidden" value="">
                                 </form>
                                 <div class="text-center">
@@ -72,7 +79,7 @@
 
 
 
-    <div class="section_features">
+    <div class="section_features preverify-hidden">
         <section class="section_features feaure_utility" id="section_utility1" data-showonvalid="True" data-productsforshowingutility="" style="display:none;">
             <div class="container">
                 <div class="row">
@@ -85,15 +92,15 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-12">
                         <img alt="GAT Sport" src="https://gpas-gfe-prd-e3d6bnade2gch4fv.a01.azurefd.net/gs26/7914f2cf-caea-4dd4-a9c5-e2aae1249c98.jpg" data-src="https://gpas-gfe-prd-e3d6bnade2gch4fv.a01.azurefd.net/gs26/7914f2cf-caea-4dd4-a9c5-e2aae1249c98.jpg" class="img-responsive">
-                        <div class="text-center" style="margin:16px 0 24px;">
-                            <a href="https://gatsport.com/collections/gat-gear" target="_blank" id="inlineShopNowBtn" class="btn btn-primary" style="border-radius:9999px;padding:12px 28px;font-weight:700;text-transform:uppercase;text-decoration:none;display:inline-block;">Shop Now</a>
-                        </div>
                     </div>
                     <div class="col-xs-12 col-sm-12">
                         <p class="text-center"></p>
                         <p style="text-align: center"><span style="color: rgba(17, 75, 154, 1)"><span style="font-size: 22px"><strong>NOW AVAILABLE</strong></span></span></p>
                         <p style="text-align: center"><strong><span style="font-size: 20px">PREMIUM PERFORMANCE APPAREL</span></strong></p>
                         <p style="text-align: center"><span style="color: rgba(17, 75, 154, 1)"><strong><span style="font-size: 18px">Shop the Next Generation of Men's and Women's Sportswear</span></strong></span></p>
+                        <div class="text-center" style="margin:20px 0 24px;">
+                            <a href="https://gatsport.com/collections/gat-gear" target="_blank" id="inlineShopNowBtn" class="btn btn-primary" style="border-radius:9999px;padding:12px 28px;font-weight:700;text-transform:uppercase;text-decoration:none;display:inline-block;">Shop Now</a>
+                        </div>
                         <p></p>
                     </div>
                 </div>
@@ -102,7 +109,7 @@
         </section>
     </div>
 
-    <div class="section_features">
+    <div class="section_features preverify-hidden">
         <section class="section_features feaure_utility" id="section_utility2" data-showonvalid="True" data-productsforshowingutility="" style="display:none;">
             <div class="container">
                 <div class="row">
@@ -172,55 +179,41 @@
         </div>
     </div>
 
-    <div style="height:60px;"></div>
+    <!-- Fixed footer with social icons -->
     <footer class="section_footer">
         <div>
             <div class="row">
                 <div class="col-md-9 col-sm-9 col-xs-12">
-                        <p class="footer__copyright">
-                            <span id="footer__year">2025</span> © <a href="https://gatsport.com/" target="_blank" style="color: inherit; text-decoration: underline;">GAT Sport</a>
-                        </p>
+                    <p class="footer__copyright">
+                        <span id="footer__year">2025</span> © <a href="https://gatsport.com/" target="_blank">GAT Sport</a>
+                    </p>
                 </div>
                 <div class="col-md-3 col-sm-3 col-xs-12">
-                        <ul class="footer__social">
-                                <li>
-                                    <a href="https://twitter.com/gatsportusa" target="_blank" style="display: inline-block; width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; text-align: center; line-height: 40px; margin: 0 5px; text-decoration: none;">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1b4b96">
-                                            <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
-                                        </svg>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="https://www.facebook.com/gatsupplements/" target="_blank" style="display: inline-block; width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; text-align: center; line-height: 40px; margin: 0 5px; text-decoration: none;">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1b4b96">
-                                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                                        </svg>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="https://www.youtube.com/user/TeamGATonline" target="_blank" style="display: inline-block; width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; text-align: center; line-height: 40px; margin: 0 5px; text-decoration: none;">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1b4b96">
-                                            <rect x="6" y="6" width="12" height="12" rx="2" fill="#1b4b96"/>
-                                            <polygon points="10,8 10,16 16,12" fill="white"/>
-                                        </svg>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="https://www.instagram.com/gatsupplements/" target="_blank" style="display: inline-block; width: 40px; height: 40px; background: #e5e7eb; border-radius: 50%; text-align: center; line-height: 40px; margin: 0 5px; text-decoration: none;">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="#1b4b96">
-                                            <rect x="4" y="4" width="16" height="16" rx="3" ry="3" fill="none" stroke="#1b4b96" stroke-width="2"/>
-                                            <circle cx="12" cy="12" r="4" fill="none" stroke="#1b4b96" stroke-width="2"/>
-                                            <circle cx="18" cy="6" r="1" fill="#1b4b96"/>
-                                        </svg>
-                                    </a>
-                                </li>
-                        </ul>
-                </div>                
-            </div>           
+                    <ul class="footer__social">
+                        <li>
+                            <a href="https://twitter.com/gatsportusa" target="_blank" aria-label="Twitter" class="twitter"></a>
+                        </li>
+                        <li>
+                            <a href="https://www.facebook.com/gatsupplements/" target="_blank" aria-label="Facebook" class="facebook"></a>
+                        </li>
+                        <li>
+                            <a href="https://www.youtube.com/user/TeamGATonline" target="_blank" aria-label="YouTube" class="youtube"></a>
+                        </li>
+                        <li>
+                            <a href="https://www.instagram.com/gatsupplements/" target="_blank" aria-label="Instagram" class="instagram"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </footer>
+
+    <!-- Minimal loading overlay for verification -->
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="loading-title">CHECKING YOUR PRODUCT</div>
+      <div class="loading-spinner"></div>
+    </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-
