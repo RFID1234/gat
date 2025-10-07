@@ -136,60 +136,110 @@ function renderInlineContainer() {
 }
 
 function renderInlineSuccess(product) {
-  const section = renderInlineContainer();
-  if (!section) return;
-  const productName = (product && product.name) || 'GAT Sport product';
-  const imageUrl = product && product.imageUrl;
-
-  const circleContent = imageUrl
-    ? `<img id="guillocheImage" src="${imageUrl}" alt="Guilloche" style="width:260px;height:260px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 6px #000 inset;">`
-    : `<div id="guillochePattern" style="width:260px;height:260px;border-radius:50%;box-shadow:0 0 0 2px #eee inset;"></div>`;
-
-  section.innerHTML = `
-<input id="ResultCode" name="ResultCode" type="hidden" value="${currentProductCode}">
-<div class="container">
-  <div class="row">
-    <div id="authoutcome" class="validcontainer" data-result="valid" data-product="${productName}" style="display:block;">
-      <div class="col-xs-12">
-        <h2 class="page-header text-center margin-top-20" style="margin-top:34px;margin-bottom:6px;">Result for '${currentProductCode}'</h2>
-        <h2 class="text-center" style="color:#296829">✓</h2>
-        <h2 class="text-center" style="color:#296829"><strong>YOUR PRODUCT IS AUTHENTIC</strong></h2>
-        <p class="text-center"><span style="font-size:18px">Thank you for your purchase of a genuine GAT Sport product</span></p>
-      </div>
-      <div class="col-sm-12" style="margin-top:30px;margin-bottom:30px;">
-        <h2 class="text-center" style="color:#2c3e50;font-weight:700;font-size:22px;margin-bottom:15px;">THIS CODE IS ASSOCIATED WITH A GUILLOCHE IMAGE</h2>
-        <p class="text-center" style="color:#7f8c8d;font-size:14px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;">PLEASE SCROLL DOWN TO COMPARE THE IMAGE ON YOUR PHONE WITH THE ONE ON THE PRODUCT</p>
-      </div>
-      <div class="col-sm-12"><hr></div>
-      <div class="col-sm-12">
-        <h2 class="page-header text-center" style="margin-top:10px;margin-bottom:18px;"><span>Product Details</span></h2>
-      </div>
-      <div class="col-sm-12 left-align" style="margin-bottom:16px;">
-        <a href="https://gatsport.com/collections/essentials" target="_blank" id="moreInfoBtn" class="btn btn-primary">More product information</a>
-      </div>
-      <div class="col-sm-12"><hr></div>
-      <div class="row" style="margin-top:28px;margin-bottom:40px;">
-        <div class="col-md-6" style="padding-left:40px;padding-right:40px;display:flex;flex-direction:column;justify-content:center;">
-          <h2 style="color:#2c5aa0;font-weight:700;font-size:20px;margin-bottom:20px;text-align:left;">THIS CODE IS ASSOCIATED WITH A GUILLOCHE IMAGE</h2>
-          <p style="color:#666;font-size:14px;line-height:1.6;margin-bottom:12px;text-align:left;">As an additional step, please check that your Guilloche image is a match on your bottle to authenticate your GAT Sport product.</p>
-          <p style="color:#666;font-size:14px;line-height:1.6;text-align:left;">Thank you for verifying your purchase.</p>
+    const section = renderInlineContainer();
+    if (!section) return;
+    const productName = (product && product.name) || 'GAT Sport product';
+    const imageUrl = product && product.imageUrl;
+  
+    const circleContent = imageUrl
+      ? `<img id="guillocheImage" src="${imageUrl}" alt="Guilloche" style="width:260px;height:260px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 6px #000 inset;">`
+      : `<div id="guillochePattern" style="width:260px;height:260px;border-radius:50%;box-shadow:0 0 0 2px #eee inset;"></div>`;
+  
+    section.innerHTML = `
+  <input id="ResultCode" name="ResultCode" type="hidden" value="${currentProductCode}">
+  <div class="container">
+    <div class="row">
+      <div id="authoutcome" class="validcontainer" data-result="valid" data-product="${productName}" style="display:block;">
+        <div class="col-xs-12">
+          <h2 class="page-header text-center margin-top-20" style="margin-top:34px;margin-bottom:6px;">Result for '${currentProductCode}'</h2>
+          <h2 class="text-center" style="color:#296829">✓</h2>
+          <h2 class="text-center" style="color:#296829"><strong>YOUR PRODUCT IS AUTHENTIC</strong></h2>
+          <p class="text-center"><span style="font-size:18px">Thank you for your purchase of a genuine GAT Sport product</span></p>
         </div>
-        <div class="col-md-6 padding-10" style="display:flex;align-items:center;justify-content:center;">${circleContent}</div>
+        <div class="col-sm-12" style="margin-top:30px;margin-bottom:30px;">
+          <h2 class="text-center" style="color:#2c3e50;font-weight:700;font-size:22px;margin-bottom:15px;">THIS CODE IS ASSOCIATED WITH A GUILLOCHE IMAGE</h2>
+          <p class="text-center" style="color:#7f8c8d;font-size:14px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;">PLEASE SCROLL DOWN TO COMPARE THE IMAGE ON YOUR PHONE WITH THE ONE ON THE PRODUCT</p>
+        </div>
+        <div class="col-sm-12"><hr></div>
+        <div class="col-sm-12">
+          <h2 class="page-header text-center" style="margin-top:10px;margin-bottom:18px;"><span>Product Details</span></h2>
+        </div>
+        <div class="col-sm-12 left-align" style="margin-bottom:16px;">
+          <a href="https://gatsport.com/collections/essentials" target="_blank" id="moreInfoBtn" class="btn btn-primary">More product information</a>
+        </div>
+        <div class="col-sm-12"><hr></div>
+        <div class="row" style="margin-top:28px;margin-bottom:40px;">
+          <div class="col-md-6" style="padding-left:40px;padding-right:40px;display:flex;flex-direction:column;justify-content:center;">
+            <h2 style="color:#2c5aa0;font-weight:700;font-size:20px;margin-bottom:20px;text-align:left;">THIS CODE IS ASSOCIATED WITH A GUILLOCHE IMAGE</h2>
+            <p style="color:#666;font-size:14px;line-height:1.6;margin-bottom:12px;text-align:left;">As an additional step, please check that your Guilloche image is a match on your bottle to authenticate your GAT Sport product.</p>
+            <p style="color:#666;font-size:14px;line-height:1.6;text-align:left;">Thank you for verifying your purchase.</p>
+          </div>
+          <div class="col-md-6 padding-10" style="display:flex;align-items:center;justify-content:center;">${circleContent}</div>
+        </div>
       </div>
     </div>
-  </div>
-</div>`;
-
-  if (!imageUrl) generateGuillochePattern(currentProductCode);
-
-  hideLoadingOverlay();
-  const btn = document.querySelector('.verify-btn, .authbutton');
-  if (btn) {
-    btn.style.opacity = '1';
-    btn.textContent = 'VERIFY MY PRODUCT';
+  </div>`;
+  
+    if (!imageUrl) generateGuillochePattern(currentProductCode);
+  
+    // ensure overlay is gone and the button restored
+    hideLoadingOverlay();
+    const btn = document.querySelector('.verify-btn, .authbutton');
+    if (btn) {
+      btn.style.opacity = '1';
+      btn.textContent = 'VERIFY MY PRODUCT';
+      // make sure button is visible again if you hid it earlier
+      btn.style.display = '';
+    }
+  
+    // smooth scroll the results into view
+    smoothScrollToResults();
+  
+    // --- robust reveal helpers (ensure hidden sections show after success) ---
+    try {
+      console.log('revealHelper: start');
+  
+      // hide hero underline (optional)
+      const heroUnderline = document.querySelector('.section_banner .code-underline');
+      if (heroUnderline) heroUnderline.style.display = 'none';
+  
+      // force show known sections & preverify wrappers (use !important)
+      const toReveal = Array.from(document.querySelectorAll('#section_utility1, #section_utility2, .preverify-hidden'));
+      toReveal.forEach(el => {
+        el.style.setProperty('display', 'block', 'important');
+        el.style.setProperty('visibility', 'visible', 'important');
+        el.style.setProperty('opacity', '1', 'important');
+        el.removeAttribute('hidden');
+      });
+  
+      console.log('revealHelper: done, revealed =', toReveal.length);
+    } catch (e) {
+      console.warn('Reveal helper error:', e);
+    }
+  
+    // Defensive re-apply in case other code tries to hide later
+    ['#section_utility1','#section_utility2','.preverify-hidden'].forEach(sel => {
+      setTimeout(()=> {
+        document.querySelectorAll(sel).forEach(el => {
+          if (el) {
+            el.style.setProperty('display', 'block', 'important');
+            el.style.setProperty('visibility', 'visible', 'important');
+            el.style.setProperty('opacity', '1', 'important');
+          }
+        });
+      }, 250);
+      setTimeout(()=> {
+        document.querySelectorAll(sel).forEach(el => {
+          if (el) {
+            el.style.setProperty('display', 'block', 'important');
+            el.style.setProperty('visibility', 'visible', 'important');
+            el.style.setProperty('opacity', '1', 'important');
+          }
+        });
+      }, 1000);
+    });
   }
-  smoothScrollToResults();
-}
+  
 
 function renderInlineError(message) {
   const section = renderInlineContainer();
