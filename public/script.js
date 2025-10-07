@@ -53,6 +53,9 @@ const urlParams = new URLSearchParams(window.location.search);
 const codeFromQuery = (urlParams.get('c') || '').trim();
 currentProductCode = codeFromQuery;
 
+const autoVerify = (urlParams.get('auto') || '') === '1';
+
+
   // Load codes.json if present
   try {
     const res = await fetch('/api/codes.json', { cache: 'no-store' });
