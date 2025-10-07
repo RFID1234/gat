@@ -51,7 +51,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 // Get product code only from ?c=CODE
 const urlParams = new URLSearchParams(window.location.search);
 const codeFromQuery = (urlParams.get('c') || '').trim();
-const autoVerify = (urlParams.get('auto') || '') === '1';
 
 // Only use the query parameter
 currentProductCode = codeFromQuery;
