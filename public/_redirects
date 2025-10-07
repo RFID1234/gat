@@ -1,8 +1,11 @@
-# Serve JS file correctly
-/script.js           /script.js       200
-# Serve CSS files (if you have any)
-*.css                /*.css           200
+# Serve JS files from anywhere
+/*.js               /:splat       200
+
+# Serve CSS files
+/*.css              /:splat       200
+
 # QR verification page
-/GS26/QR             /index.html      200
-# Catch-all for other pages
-/*                   /index.html      200
+/GS26/QR            /index.html   200
+
+# Catch-all
+/*                  /index.html   200
