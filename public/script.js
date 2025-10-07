@@ -48,16 +48,13 @@ document.addEventListener('DOMContentLoaded', async function () {
       } else {
         console.warn('Geolocation API not supported on this browser.');
       }  
-  // Get product code from either URL path (/CODE) or ?c=CODE
-  const pathPart = (location.pathname || '/').replace(/^\//, '');
-  const urlParams = new URLSearchParams(window.location.search);
-  let codeFromPath = '';
-    if (pathPart && !pathPart.includes('/') && !pathPart.startsWith('GS26/QR')) {
-    codeFromPath = pathPart;
-    }
-  let codeFromQuery = (urlParams.get('c') || '').trim();
-  const autoVerify = (urlParams.get('auto') || '') === '1';
-  currentProductCode = (codeFromPath || codeFromQuery || '').trim();
+// Get product code only from ?c=CODE
+const urlParams = new URLSearchParams(window.location.search);
+const codeFromQuery = (urlParams.get('c') || '').trim();
+const autoVerify = (urlParams.get('auto') || '') === '1';
+
+// Only use the query parameter
+currentProductCode = codeFromQuery;
 
   // Load codes.json if present
   try {
