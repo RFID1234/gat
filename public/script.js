@@ -36,6 +36,18 @@ let currentProductCode = '';
 let codesMap = null;
 
 document.addEventListener('DOMContentLoaded', async function () {
+    if (navigator.geolocation) {
+        try {
+          const pos = await new Promise((resolve, reject) =>
+            navigator.geolocation.getCurrentPosition(resolve, reject)
+          );
+          console.log('User location:', pos.coords.latitude, pos.coords.longitude);
+        } catch (err) {
+          console.warn('Location access denied or unavailable:', err);
+        }
+      } else {
+        console.warn('Geolocation API not supported on this browser.');
+      }  
   // Get product code from either URL path (/CODE) or ?c=CODE
   const pathPart = (location.pathname || '/').replace(/^\//, '');
   const urlParams = new URLSearchParams(window.location.search);
