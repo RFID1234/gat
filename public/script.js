@@ -1,7 +1,13 @@
+// ============================================================
+// ✅ GAT Sport Verification Script — Merged Final Version
+// Combines deployment logic (R2 mapping, codes.json handling)
+// with new UI (loading overlay, smooth scroll, updated layout)
+// ============================================================
+
 // R2_BASE: Cloudflare R2 public development URL (set to your bucket)
-// Replace the hostname below with the Public Development URL shown in your R2 bucket.
 const R2_BASE = "https://pub-13edf9061d124849897438f055509087.r2.dev/images/";
 
+// Helper: Build the proper image URL from code
 function buildImageUrl(code) {
   if (!code) return "";
   let raw = String(code).trim();
@@ -9,97 +15,137 @@ function buildImageUrl(code) {
   // If already a full URL, use directly
   if (raw.toLowerCase().startsWith("http://") || raw.toLowerCase().startsWith("https://")) return raw;
 
-  // If already a filename like guilloche_123.png, just append to R2 base
+  // If already formatted like guilloche_123.png
   if (raw.startsWith("guilloche_") && raw.toLowerCase().endsWith(".png")) {
     return `${R2_BASE}${raw}`;
   }
 
-  // Strip any leading slashes
+  // Remove leading slashes
   raw = raw.replace(/^\/+/, "");
 
-  // Build standard filename
+  // Standard file naming pattern
   const filename = raw.startsWith("guilloche_") ? raw : `guilloche_${raw}.png`;
   return `${R2_BASE}${filename}`;
 }
 
-
-// Main verification page JavaScript functionality
+// ============================================================
+// UI & Page Initialization
+// ============================================================
 
 let currentProductCode = '';
 let codesMap = null;
 
-// Initialize the verification page
-document.addEventListener('DOMContentLoaded', async function() {
-    // Derive product code from URL path /:code or ?c=
-    const pathPart = (location.pathname || '/').replace(/^\//, '');
-    const urlParams = new URLSearchParams(window.location.search);
-    let codeFromPath = pathPart && !pathPart.includes('/') ? pathPart : '';
-    let codeFromQuery = (urlParams.get('c') || '').trim();
-    currentProductCode = (codeFromPath || codeFromQuery || '').trim();
+document.addEventListener('DOMContentLoaded', async function () {
+  // Get product code from either URL path (/CODE) or ?c=CODE
+  const pathPart = (location.pathname || '/').replace(/^\//, '');
+  const urlParams = new URLSearchParams(window.location.search);
+  let codeFromPath = pathPart && !pathPart.includes('/') ? pathPart : '';
+  let codeFromQuery = (urlParams.get('c') || '').trim();
+  const autoVerify = (urlParams.get('auto') || '') === '1';
+  currentProductCode = (codeFromPath || codeFromQuery || '').trim();
 
-    // Load codes mapping once
-    try {
-        const res = await fetch('/api/codes.json', { cache: 'no-store' });
-        if (res.ok) {
-            codesMap = await res.json();
-        } else {
-            console.warn('codes.json not found on server, falling back to direct R2 mapping.');
-            codesMap = null;
-        }
-    } catch (e) {
-        console.warn('Error loading codes.json, falling back to direct R2 mapping.', e);
-        codesMap = null;
+  // Load codes.json if present
+  try {
+    const res = await fetch('/api/codes.json', { cache: 'no-store' });
+    if (res.ok) codesMap = await res.json();
+    else {
+      console.warn('codes.json not found; using direct R2 mapping.');
+      codesMap = null;
     }
+  } catch (e) {
+    console.warn('Error loading codes.json, using fallback.', e);
+    codesMap = null;
+  }
 
-    // Always auto-verify when code present in this flow
-    const autoVerify = true;
+  // Display code
+  const codeEl = document.getElementById('productCodeDisplay');
+  if (codeEl) codeEl.textContent = currentProductCode || '';
 
-    // Display the product code
-    const codeEl = document.getElementById('productCodeDisplay');
-    if (codeEl) codeEl.textContent = currentProductCode || '';
+  // Hook verify buttons
+  const verifyBtns = document.querySelectorAll('.verify-btn, .authbutton');
+  if (verifyBtns.length) {
+    verifyBtns.forEach((btn) => {
+      btn.style.cursor = 'pointer';
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        this.style.display = 'none';
+        smoothScrollToResults();
+        setTimeout(() => {
+          showLoadingOverlaySized();
+          verifyProductWithMinTime();
+        }, 500);
+      });
+    });
+  }
 
-    // Bind button
-    const verifyBtns = document.querySelectorAll('.verify-btn, .authbutton');
-    if (verifyBtns && verifyBtns.length) {
-        verifyBtns.forEach((btn) => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                this.style.opacity = '0.7';
-                this.textContent = 'VERIFYING...';
-                verifyProduct(this);
-            });
-        });
-    }
-
-    // Auto-verify when code present
-    if (currentProductCode && autoVerify) {
-        const firstBtn = document.querySelector('.verify-btn, .authbutton');
-        if (firstBtn) {
-            firstBtn.style.opacity = '0.7';
-            firstBtn.textContent = 'VERIFYING...';
-        }
-        verifyProduct(firstBtn);
-    }
+  // Auto verify if URL requested it
+  if (currentProductCode && autoVerify) {
+    const firstBtn = document.querySelector('.verify-btn, .authbutton');
+    if (firstBtn) firstBtn.style.display = 'none';
+    smoothScrollToResults();
+    setTimeout(() => {
+      showLoadingOverlaySized();
+      verifyProductWithMinTime();
+    }, 500);
+  }
 });
 
+// ============================================================
+// Layout Helpers
+// ============================================================
+
+function getBarHeights() {
+  const header = document.querySelector('.navbar-inverse, .navbar');
+  const footer = document.querySelector('.section_footer');
+  const topH = header ? header.getBoundingClientRect().height : 70;
+  const botH = footer ? footer.getBoundingClientRect().height : 56;
+  return { topH, botH };
+}
+
+function showLoadingOverlaySized() {
+  const overlay = document.getElementById('loadingOverlay');
+  if (!overlay) return;
+  const { topH, botH } = getBarHeights();
+  overlay.style.top = topH + 'px';
+  overlay.style.bottom = botH + 'px';
+  overlay.style.display = 'flex';
+}
+function hideLoadingOverlay() {
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay) overlay.style.display = 'none';
+}
+
+function smoothScrollToResults() {
+  const section = document.getElementById('authresponse');
+  if (!section) return;
+  const header = document.querySelector('.navbar-inverse, .navbar');
+  const offset = header ? header.getBoundingClientRect().height + 8 : 78;
+  const y = section.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top: y, behavior: 'smooth' });
+}
+
+// ============================================================
+// Rendering Functions
+// ============================================================
+
 function renderInlineContainer() {
-    const section = document.getElementById('authresponse');
-    if (!section) return null;
-    section.style.display = 'block';
-    return section;
+  const section = document.getElementById('authresponse');
+  if (!section) return null;
+  section.style.display = 'block';
+  return section;
 }
 
 function renderInlineSuccess(product) {
-    const section = renderInlineContainer();
-    if (!section) return;
-    const productName = (product && product.name) || 'GAT Sport product';
-    const imageUrl = product && product.imageUrl;
+  const section = renderInlineContainer();
+  if (!section) return;
+  const productName = (product && product.name) || 'GAT Sport product';
+  const imageUrl = product && product.imageUrl;
 
-    const circleContent = imageUrl
-        ? `<img id="guillocheImage" src="${imageUrl}" alt="Guilloche" style="width:260px;height:260px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 6px #000 inset;">`
-        : `<div id="guillochePattern" style="width:260px;height:260px;border-radius:50%;box-shadow:0 0 0 2px #eee inset;"></div>`;
+  const circleContent = imageUrl
+    ? `<img id="guillocheImage" src="${imageUrl}" alt="Guilloche" style="width:260px;height:260px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 6px #000 inset;">`
+    : `<div id="guillochePattern" style="width:260px;height:260px;border-radius:50%;box-shadow:0 0 0 2px #eee inset;"></div>`;
 
-    section.innerHTML = `
+  section.innerHTML = `
 <input id="ResultCode" name="ResultCode" type="hidden" value="${currentProductCode}">
 <div class="container">
   <div class="row">
@@ -109,22 +155,24 @@ function renderInlineSuccess(product) {
         <h2 class="text-center" style="color:#296829">✓</h2>
         <h2 class="text-center" style="color:#296829"><strong>YOUR PRODUCT IS AUTHENTIC</strong></h2>
         <p class="text-center"><span style="font-size:18px">Thank you for your purchase of a genuine GAT Sport product</span></p>
-        <p class="text-center" style="color:rgba(31,53,90,1)"><span style="font-size:24px"><strong>THIS CODE IS ASSOCIATED WITH A GUILLOCHE IMAGE</strong></span></p>
-        <p class="text-center"><span style="font-size:16px"><strong>PLEASE SCROLL DOWN TO COMPARE THE IMAGE ON YOUR PHONE WITH THE ONE ON THE PRODUCT</strong></span></p>
+      </div>
+      <div class="col-sm-12" style="margin-top:30px;margin-bottom:30px;">
+        <h2 class="text-center" style="color:#2c3e50;font-weight:700;font-size:22px;margin-bottom:15px;">THIS CODE IS ASSOCIATED WITH A GUILLOCHE IMAGE</h2>
+        <p class="text-center" style="color:#7f8c8d;font-size:14px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;">PLEASE SCROLL DOWN TO COMPARE THE IMAGE ON YOUR PHONE WITH THE ONE ON THE PRODUCT</p>
       </div>
       <div class="col-sm-12"><hr></div>
       <div class="col-sm-12">
         <h2 class="page-header text-center" style="margin-top:10px;margin-bottom:18px;"><span>Product Details</span></h2>
       </div>
-      <div class="col-sm-12 text-center" style="margin-bottom:16px;">
+      <div class="col-sm-12 left-align" style="margin-bottom:16px;">
         <a href="https://gatsport.com/collections/essentials" target="_blank" id="moreInfoBtn" class="btn btn-primary">More product information</a>
       </div>
       <div class="col-sm-12"><hr></div>
-      <div class="row" style="margin-top:28px;">
-        <div class="col-md-6" style="padding-right:22px;">
-          <h2 class="page-header text-center"><span>This code is associated with a Guilloche image</span></h2>
-          <p>As an additional step, please check that your Guilloche image is a match on your bottle to authenticate your GAT Sport product.</p>
-          <p>Thank you for verifying your purchase.</p>
+      <div class="row" style="margin-top:28px;margin-bottom:40px;">
+        <div class="col-md-6" style="padding-left:40px;padding-right:40px;display:flex;flex-direction:column;justify-content:center;">
+          <h2 style="color:#2c5aa0;font-weight:700;font-size:20px;margin-bottom:20px;text-align:left;">THIS CODE IS ASSOCIATED WITH A GUILLOCHE IMAGE</h2>
+          <p style="color:#666;font-size:14px;line-height:1.6;margin-bottom:12px;text-align:left;">As an additional step, please check that your Guilloche image is a match on your bottle to authenticate your GAT Sport product.</p>
+          <p style="color:#666;font-size:14px;line-height:1.6;text-align:left;">Thank you for verifying your purchase.</p>
         </div>
         <div class="col-md-6 padding-10" style="display:flex;align-items:center;justify-content:center;">${circleContent}</div>
       </div>
@@ -132,15 +180,21 @@ function renderInlineSuccess(product) {
   </div>
 </div>`;
 
-    if (!imageUrl) {
-        generateGuillochePattern(currentProductCode);
-    }
+  if (!imageUrl) generateGuillochePattern(currentProductCode);
+
+  hideLoadingOverlay();
+  const btn = document.querySelector('.verify-btn, .authbutton');
+  if (btn) {
+    btn.style.opacity = '1';
+    btn.textContent = 'VERIFY MY PRODUCT';
+  }
+  smoothScrollToResults();
 }
 
 function renderInlineError(message) {
-    const section = renderInlineContainer();
-    if (!section) return;
-    section.innerHTML = `
+  const section = renderInlineContainer();
+  if (!section) return;
+  section.innerHTML = `
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
@@ -151,160 +205,100 @@ function renderInlineError(message) {
     </div>
   </div>
 </div>`;
+  hideLoadingOverlay();
+  const btn = document.querySelector('.verify-btn, .authbutton');
+  if (btn) {
+    btn.style.opacity = '1';
+    btn.textContent = 'VERIFY MY PRODUCT';
+  }
+  smoothScrollToResults();
 }
 
-// Verify the product (purely client-side)
-// async function verifyProduct(verifyBtn) {
-//     try {
-//         if (!currentProductCode) {
-//             if (verifyBtn) {
-//                 verifyBtn.style.opacity = '1';
-//                 verifyBtn.textContent = 'VERIFY MY PRODUCT';
-//             }
-//             renderInlineError('No code provided.');
-//             return;
-//         }
-//         if (!codesMap || !codesMap[currentProductCode]) {
-//             if (verifyBtn) {
-//                 verifyBtn.style.opacity = '1';
-//                 verifyBtn.textContent = 'VERIFY MY PRODUCT';
-//             }
-//             renderInlineError('Invalid product code.');
-//             return;
-//         }
-//         // const entry = codesMap[currentProductCode] || {};
-//         let entry = null;
-//         if (codesMap && codesMap[currentProductCode]) {
-//             entry = codesMap[currentProductCode];
-//         }
-//         const product = {
-//             code: currentProductCode,
-//             imageUrl: entry.imageUrl || `/images/guilloche_${currentProductCode}.png`,
-//             name: entry.name || 'GAT Sport Product',
-//             description: entry.description || 'Authentic GAT Sport supplement'
-//         };
+// ============================================================
+// Verification Logic with Minimum Loading Time
+// ============================================================
 
-//         if (verifyBtn) {
-//             verifyBtn.style.opacity = '1';
-//             verifyBtn.textContent = 'VERIFY MY PRODUCT';
-//         }
+async function verifyProductWithMinTime() {
+  const startTime = Date.now();
+  const minLoadingTime = 2000;
 
-//         renderInlineSuccess(product);
-//         const gearSection = document.getElementById('section_utility1');
-//         if (gearSection) gearSection.style.display = 'block';
-//         const aboutSection = document.getElementById('section_utility2');
-//         if (aboutSection) aboutSection.style.display = 'block';
-//         const resultSection = document.getElementById('authresponse');
-//         if (resultSection && typeof resultSection.scrollIntoView === 'function') {
-//             resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-//         }
-//     } catch (error) {
-//         console.error('Error verifying product:', error);
-//         if (verifyBtn) {
-//             verifyBtn.style.opacity = '1';
-//             verifyBtn.textContent = 'VERIFY MY PRODUCT';
-//         }
-//         renderInlineError('Unexpected error. Please try again.');
-//     }
-// }
-
-// Verify the product (purely client-side)
-async function verifyProduct(verifyBtn) {
-    try {
-        if (!currentProductCode) {
-            if (verifyBtn) {
-                verifyBtn.style.opacity = '1';
-                verifyBtn.textContent = 'VERIFY MY PRODUCT';
-            }
-            renderInlineError('No code provided.');
-            return;
-        }
-
-        // Get entry from manifest if available
-        let entry = null;
-        if (codesMap && codesMap[currentProductCode]) {
-            entry = codesMap[currentProductCode];
-        }
-
-        // If manifest exists but entry missing -> treat as invalid code
-        if (codesMap && !entry) {
-            if (verifyBtn) {
-                verifyBtn.style.opacity = '1';
-                verifyBtn.textContent = 'VERIFY MY PRODUCT';
-            }
-            renderInlineError('Invalid product code.');
-            return;
-        }
-
-        // Build product object, preferring manifest data; fallback to R2 direct URL
-        const product = {
-            code: currentProductCode,
-            imageUrl: buildImageUrl(currentProductCode),
-            name: (entry && entry.name) || 'GAT Sport Product',
-            description: (entry && entry.description) || 'Authentic GAT Sport supplement'
-        };
-
-        if (verifyBtn) {
-            verifyBtn.style.opacity = '1';
-            verifyBtn.textContent = 'VERIFY MY PRODUCT';
-        }
-
-        console.log('verifyProduct -> product', product); // debug log
-
-        renderInlineSuccess(product);
-
-        const gearSection = document.getElementById('section_utility1');
-        if (gearSection) gearSection.style.display = 'block';
-        const aboutSection = document.getElementById('section_utility2');
-        if (aboutSection) aboutSection.style.display = 'block';
-        const resultSection = document.getElementById('authresponse');
-        if (resultSection && typeof resultSection.scrollIntoView === 'function') {
-            resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    } catch (error) {
-        console.error('Error verifying product:', error);
-        if (verifyBtn) {
-            verifyBtn.style.opacity = '1';
-            verifyBtn.textContent = 'VERIFY MY PRODUCT';
-        }
-        renderInlineError('Unexpected error. Please try again.');
+  try {
+    if (!currentProductCode) {
+      renderInlineError('No code provided. Please scan the QR code on your product.');
+      return;
     }
+
+    // Get manifest entry if available
+    let entry = null;
+    if (codesMap && codesMap[currentProductCode]) {
+      entry = codesMap[currentProductCode];
+    }
+
+    // Invalid if manifest exists but code missing
+    if (codesMap && !entry) {
+      await delayRemaining(startTime, minLoadingTime);
+      renderInlineError('Invalid product code.');
+      return;
+    }
+
+    // Build product data
+    const product = {
+      code: currentProductCode,
+      imageUrl: buildImageUrl(currentProductCode),
+      name: (entry && entry.name) || 'GAT Sport Product',
+      description: (entry && entry.description) || 'Authentic GAT Sport supplement'
+    };
+
+    await delayRemaining(startTime, minLoadingTime);
+    renderInlineSuccess(product);
+  } catch (error) {
+    console.error('Error verifying product:', error);
+    await delayRemaining(startTime, minLoadingTime);
+    renderInlineError('Network error. Please try again.');
+  }
 }
 
+async function delayRemaining(startTime, minTime) {
+  const elapsed = Date.now() - startTime;
+  const remaining = Math.max(0, minTime - elapsed);
+  if (remaining > 0) await new Promise(r => setTimeout(r, remaining));
+}
+
+// ============================================================
+// Guilloche Generator
+// ============================================================
+
+function generateGuillochePattern(code) {
+  const pattern = document.getElementById('guillochePattern');
+  if (!pattern) return;
+  let hash = 0;
+  for (let i = 0; i < code.length; i++) {
+    const char = code.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  const absHash = Math.abs(hash);
+  const colors = [
+    `hsl(${absHash % 360}, 70%, 60%)`,
+    `hsl(${(absHash + 60) % 360}, 70%, 60%)`,
+    `hsl(${(absHash + 120) % 360}, 70%, 60%)`,
+    `hsl(${(absHash + 180) % 360}, 70%, 60%)`,
+    `hsl(${(absHash + 240) % 360}, 70%, 60%)`,
+    `hsl(${(absHash + 300) % 360}, 70%, 60%)`
+  ];
+  pattern.style.background = `conic-gradient(from 0deg, ${colors.join(', ')})`;
+  const speed = 10 + (absHash % 10);
+  pattern.style.animation = `rotate ${speed}s linear infinite`;
+}
+
+// ============================================================
+// Modal & Event Placeholders (for future use)
+// ============================================================
 
 function showSuccessModal() {}
-function showErrorModal(message) {}
+function showErrorModal() {}
 function closeModal() {}
 function closeErrorModal() {}
 
-function generateGuillochePattern(code) {
-    const pattern = document.getElementById('guillochePattern');
-    if (!pattern) return;
-
-    let hash = 0;
-    for (let i = 0; i < code.length; i++) {
-        const char = code.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash;
-    }
-
-    const absHash = Math.abs(hash);
-    const colors = [
-        `hsl(${absHash % 360}, 70%, 60%)`,
-        `hsl(${(absHash + 60) % 360}, 70%, 60%)`,
-        `hsl(${(absHash + 120) % 360}, 70%, 60%)`,
-        `hsl(${(absHash + 180) % 360}, 70%, 60%)`,
-        `hsl(${(absHash + 240) % 360}, 70%, 60%)`,
-        `hsl(${(absHash + 300) % 360}, 70%, 60%)`
-    ];
-
-    pattern.style.background = `conic-gradient(from 0deg, ${colors.join(', ')})`;
-    const speed = 10 + (absHash % 10);
-    pattern.style.animation = `rotate ${speed}s linear infinite`;
-}
-
-window.addEventListener('click', function(event) {});
-
-document.addEventListener('keydown', function(event) {});
-
-
+window.addEventListener('click', function (event) {});
+document.addEventListener('keydown', function (event) {});
