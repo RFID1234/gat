@@ -1,7 +1,7 @@
 const { builder } = require('@netlify/functions');
 
 let codesMap = null;
-try { codesMap = require('../api/codes.json'); } catch (e) { codesMap = null; }
+try { codesMap = require('./codes.json'); } catch (e) { codesMap = null; }
 
 async function handler(event){
   if (event.httpMethod !== 'POST'){
