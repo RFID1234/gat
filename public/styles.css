@@ -1,982 +1,472 @@
-/* Reset and base styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: 'Montserrat', 'Arial', sans-serif;
-    line-height: 1.6;
-    color: #111;
-    background: #ffffff;
-    min-height: 100vh;
-    overflow-x: hidden;
-    position: relative;
-}
-
-/* Background with exact GAT Sport blurred product image */
-.background-image { display: none; }
-
-.background-image::before { display: none; }
-
-.container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 20px;
-    position: relative;
-    z-index: 1;
-}
-
-/* Inline verification spacing/layout */
-#authresponse .page-header {
-    margin: 40px 0 22px;
-}
-
-#authresponse hr {
-    border: 0;
-    height: 1px;
-    background: rgba(0,0,0,0.12);
-    margin: 24px 0 36px;
-}
-
-#authresponse .guilloche-copy { /* helper if present */
-    color: #3f4a5a;
-}
-
-#authresponse p {
-    margin: 10px 0 18px;
-    color: #3f4a5a;
-}
-
-#authresponse #guillocheImage {
-    width: 420px;
-    height: 420px;
-    border-radius: 50%;
-    object-fit: cover;
-    box-shadow: 0 0 0 6px #000 inset, 0 8px 24px rgba(0,0,0,0.08);
-    margin: 20px auto 60px;
-    display: block;
-    max-width: 100%;
-}
-
-#authresponse #guillochePattern {
-    width: 360px;
-    height: 360px;
-    box-shadow: 0 0 0 4px #e6e6e6 inset, 0 8px 24px rgba(0,0,0,0.08);
-    margin: 20px auto 60px;
-    max-width: 100%;
-}
-
-/* Responsive fixes for authentication result images */
-@media (max-width: 768px) {
-    #authresponse #guillocheImage {
-        width: 280px;
-        height: 280px;
-        margin: 15px auto 40px;
-    }
-    
-    #authresponse #guillochePattern {
-        width: 240px;
-        height: 240px;
-        margin: 15px auto 40px;
-    }
-}
-
-@media (max-width: 480px) {
-    #authresponse #guillocheImage {
-        width: 220px;
-        height: 220px;
-        margin: 10px auto 30px;
-    }
-    
-    #authresponse #guillochePattern {
-        width: 180px;
-        height: 180px;
-        margin: 10px auto 30px;
-    }
-}
-
-/* Header styles - Exact GAT Sport logo */
-.verify-header {
-    position: absolute;
-    top: 40px;
-    left: 40px;
-    z-index: 10;
-}
-
-.logo h1 {
-    color: white;
-    font-size: 2.8rem;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    font-family: 'Arial Black', sans-serif;
-    line-height: 1;
-}
-
-.logo h1::before {
-    content: 'GAT';
-    display: block;
-    font-size: 3.2rem;
-    font-weight: 900;
-    color: #ffffff;
-    text-shadow: 0 0 15px rgba(255,255,255,0.4);
-    letter-spacing: 4px;
-}
-
-.logo h1::after {
-    content: 'SPORT';
-    display: block;
-    font-size: 1.4rem;
-    font-weight: 300;
-    color: #b8c5d6;
-    letter-spacing: 6px;
-    margin-top: -8px;
-    text-shadow: none;
-}
-
-/* Main verification area - Exact GAT Sport layout */
-.verify-main {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    text-align: center;
-    padding: 0 20px;
-}
-
-.auth-content {
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(15px);
-    border-radius: 25px;
-    padding: 70px 60px;
-    max-width: 650px;
-    width: 100%;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
-    position: relative;
-}
-
-.auth-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-    border-radius: 25px;
-    z-index: -1;
-}
-
-.auth-title {
-    font-size: 2.6rem;
-    color: white;
-    margin-bottom: 25px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    text-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
-    line-height: 1.2;
-}
-
-.auth-subtitle {
-    color: #b8c5d6;
-    font-size: 1.15rem;
-    margin-bottom: 60px;
-    line-height: 1.7;
-    font-weight: 300;
-    letter-spacing: 0.5px;
-}
-
-/* Product code display - Exact GAT Sport style */
-.product-code-display {
-    margin: 60px 0;
-}
-
-.code-line {
-    height: 4px;
-    background: linear-gradient(90deg, transparent, #ffffff, transparent);
-    margin-bottom: 35px;
-    border-radius: 2px;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
-    opacity: 0.8;
-}
-
-.code-number {
-    font-size: 4rem;
-    font-weight: bold;
-    color: white;
-    font-family: 'Courier New', monospace;
-    letter-spacing: 4px;
-    text-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
-    background: linear-gradient(45deg, #ffffff, #b8c5d6, #ffffff);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1;
-}
-
-/* Verify button - Exact GAT Sport style */
-.verify-btn {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
-    color: white;
-    border: none;
-    padding: 28px 55px;
-    border-radius: 18px;
-    font-size: 1.4rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.4s ease;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    box-shadow: 0 12px 35px rgba(30, 60, 114, 0.5);
-    position: relative;
-    overflow: hidden;
-    margin-top: 20px;
-}
-
-.verify-btn::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.6s;
-}
-
-.verify-btn:hover::before {
-    left: 100%;
-}
-
-.verify-btn:hover {
-    background: linear-gradient(135deg, #2a5298 0%, #1e3c72 50%, #2a5298 100%);
-    transform: translateY(-4px);
-    box-shadow: 0 18px 45px rgba(30, 60, 114, 0.7);
-}
-
-.verify-btn:active {
-    transform: translateY(-2px);
-}
-
-/* Modal styles - Exact GAT Sport style */
-.modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.95);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    backdrop-filter: blur(8px);
-}
-
-.modal-content {
-    background: linear-gradient(135deg, #0a1a2a 0%, #1a2a3a 100%);
-    border-radius: 25px;
-    padding: 60px;
-    max-width: 750px;
-    width: 90%;
-    max-height: 90vh;
-    overflow-y: auto;
-    text-align: center;
-    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    position: relative;
-}
-
-.modal-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
-    border-radius: 25px;
-    z-index: -1;
-}
-
-.success-icon {
-    font-size: 6rem;
-    color: #28a745;
-    margin-bottom: 30px;
-    text-shadow: 0 0 25px rgba(40, 167, 69, 0.6);
-}
-
-.success-title {
-    color: #28a745;
-    font-size: 2.2rem;
-    margin-bottom: 25px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.success-message {
-    color: #b8c5d6;
-    font-size: 1.3rem;
-    margin-bottom: 50px;
-    line-height: 1.7;
-    font-weight: 300;
-}
-
-.guilloche-section {
-    margin-top: 50px;
-    padding-top: 50px;
-    border-top: 2px solid rgba(255, 255, 255, 0.15);
-}
-
-.guilloche-title {
-    color: white;
-    font-size: 1.6rem;
-    margin-bottom: 25px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.guilloche-instruction {
-    color: #b8c5d6;
-    font-size: 1.1rem;
-    margin-bottom: 35px;
-    line-height: 1.6;
-    font-weight: 300;
-}
-
-.guilloche-image-container {
-    margin: 50px 0;
-    display: flex;
-    justify-content: center;
-}
-
-.guilloche-pattern {
-    width: 280px;
-    height: 280px;
-    border-radius: 50%;
-    background: conic-gradient(
-        from 0deg,
-        #ff6b6b,
-        #4ecdc4,
-        #45b7d1,
-        #96ceb4,
-        #feca57,
-        #ff9ff3,
-        #54a0ff,
-        #5f27cd,
-        #ff6b6b
-    );
-    position: relative;
-    animation: rotate 15s linear infinite;
-    box-shadow: 0 0 40px rgba(255, 255, 255, 0.3);
-}
-
-.guilloche-pattern::before {
-    content: '';
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    right: 20px;
-    bottom: 20px;
-    border-radius: 50%;
-    background: #0a1a2a;
-}
-
-.guilloche-pattern::after {
-    content: '';
-    position: absolute;
-    top: 50px;
-    left: 50px;
-    right: 50px;
-    bottom: 50px;
-    border-radius: 50%;
-    background: conic-gradient(
-        from 180deg,
-        #ff6b6b,
-        #4ecdc4,
-        #45b7d1,
-        #96ceb4,
-        #feca57,
-        #ff9ff3,
-        #54a0ff,
-        #5f27cd,
-        #ff6b6b
-    );
-}
-
-@keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.comparison-instructions {
-    text-align: left;
-    margin-top: 40px;
-    background: rgba(255, 255, 255, 0.08);
-    padding: 30px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.comparison-instructions h4 {
-    color: white;
-    margin-bottom: 25px;
-    font-size: 1.3rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.comparison-instructions ol {
-    padding-left: 30px;
-}
-
-.comparison-instructions li {
-    margin-bottom: 15px;
-    color: white;
-    line-height: 1.6;
-    font-weight: 300;
-}
-
-.close-btn {
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-    color: white;
-    border: none;
-    padding: 18px 35px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 1.1rem;
-    margin-top: 40px;
-    transition: all 0.3s;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: bold;
-}
-
-.close-btn:hover {
-    background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(30, 60, 114, 0.5);
-}
-
-/* Error modal styles */
-.modal-content.error {
-    border-left: 6px solid #dc3545;
-}
-
-.error-icon {
-    font-size: 6rem;
-    color: #dc3545;
-    margin-bottom: 30px;
-    text-shadow: 0 0 25px rgba(220, 53, 69, 0.6);
-}
-
-.error-title {
-    color: #dc3545;
-    font-size: 2.2rem;
-    margin-bottom: 25px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-.error-message {
-    color: #b8c5d6;
-    font-size: 1.3rem;
-    margin-bottom: 40px;
-    line-height: 1.7;
-    font-weight: 300;
-}
-
-/* Footer - Exact GAT Sport style */
-footer {
-    position: fixed;
-    bottom: 30px;
-    left: 30px;
-    color: #114b9a;
-    font-size: 1rem;
-    z-index: 10;
-    font-weight: 300;
-    letter-spacing: 1px;
-}
-
-/* Responsive design - Exact GAT Sport mobile layout */
-@media (max-width: 768px) {
-    body {
-        overflow-x: hidden;
-    }
-    
-    .container {
-        padding: 10px;
-        max-width: 100%;
-    }
-    
-    /* Fix navbar positioning */
-    .navbar {
-        position: relative;
-    }
-    
-    .navbar .container {
-        padding: 10px 15px;
-    }
-    
-    .navbar-brand img {
-        height: 35px;
-    }
-    
-    /* Fix banner section */
-    .section_banner {
-        min-height: 100vh;
-        padding: 0;
-    }
-    
-    .carousel-inner, .item {
-        height: 100vh;
-        padding: 20px 0;
-    }
-    
-    .banner__carousel__img {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-    }
-    
-    .backstretch img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-    }
-    
-    /* Fix main content positioning */
-    .section_banner .container {
-        position: relative;
-        z-index: 2;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        padding: 60px 20px 20px;
-    }
-    
-    .page-header {
-        font-size: 24px !important;
-        line-height: 1.2;
-        margin-bottom: 15px;
-        text-align: center;
-        padding: 0 10px;
-    }
-    
-    .page-subheader p {
-        font-size: 14px !important;
-        line-height: 1.4;
-        margin-bottom: 30px;
-        padding: 0 10px;
-    }
-    
-    .bigtext {
-        font-size: 28px !important;
-        letter-spacing: 1px;
-        margin: 20px auto;
-        word-break: break-all;
-        padding: 0 10px;
-    }
-    
-    .btn-primary {
-        padding: 15px 30px;
-        font-size: 14px;
-        letter-spacing: 1px;
-        margin: 20px 0;
-    }
-    
-    /* Fix modal responsiveness */
-    .modal-content {
-        padding: 30px 20px;
-        margin: 10px;
-        border-radius: 15px;
-        max-height: 95vh;
-        overflow-y: auto;
-    }
-    
-    .guilloche-pattern {
-        width: 200px;
-        height: 200px;
-    }
-    
-    .success-icon, .error-icon {
-        font-size: 4rem;
-    }
-    
-    .success-title, .error-title {
-        font-size: 1.6rem;
-        line-height: 1.2;
-    }
-    
-    .success-message, .error-message {
-        font-size: 1.1rem;
-        line-height: 1.4;
-    }
-    
-    /* Fix footer positioning */
-    .section_footer {
-        position: relative;
-        bottom: auto;
-        left: auto;
-        right: auto;
-        padding: 20px;
-        background: rgba(255, 255, 255, 0.95);
-        margin-top: 40px;
-    }
-    
-    .footer__social {
-        justify-content: center;
-        margin-top: 15px;
-    }
-    
-    /* Fix utility sections */
-    .section_features {
-        padding: 40px 0;
-    }
-    
-    .section_features img {
-        width: 100%;
-        height: auto;
-        max-width: 100%;
-        object-fit: contain;
-    }
-    
-    .feaure_utility .container {
-        padding: 0 20px;
-    }
-    
-    .feaure_utility .page-header {
-        font-size: 22px !important;
-        margin-bottom: 20px;
-    }
-    
-    .feaure_utility p {
-        font-size: 14px;
-        line-height: 1.5;
-        margin-bottom: 15px;
-        padding: 0 10px;
-    }
-}
-
-@media (max-width: 480px) {
-    .page-header {
-        font-size: 20px !important;
-        line-height: 1.1;
-    }
-    
-    .page-subheader p {
-        font-size: 12px !important;
-    }
-    
-    .bigtext {
-        font-size: 24px !important;
-        letter-spacing: 0.5px;
-    }
-    
-    .btn-primary {
-        padding: 12px 25px;
-        font-size: 12px;
-    }
-    
-    .modal-content {
-        padding: 20px 15px;
-        margin: 5px;
-    }
-    
-    .guilloche-pattern {
-        width: 160px;
-        height: 160px;
-    }
-    
-    .success-icon, .error-icon {
-        font-size: 3.5rem;
-    }
-    
-    .success-title, .error-title {
-        font-size: 1.4rem;
-    }
-    
-    .section_features {
-        padding: 30px 0;
-    }
-    
-    .feaure_utility .page-header {
-        font-size: 18px !important;
-    }
-    
-    .feaure_utility p {
-        font-size: 12px;
-    }
-}
-
-/* Additional responsive fixes for very small screens */
-@media (max-width: 360px) {
-    .page-header {
-        font-size: 18px !important;
-    }
-    
-    .bigtext {
-        font-size: 20px !important;
-    }
-    
-    .btn-primary {
-        padding: 10px 20px;
-        font-size: 11px;
-    }
-    
-    .guilloche-pattern {
-        width: 140px;
-        height: 140px;
-    }
-}
-
-/* ==============================================
-   GAT hero layout overrides (align like website)
-   ============================================== */
-:root { --gat-blue: #114b9a; }
-
-/* Navbar */
-.navbar-inverse {
-    background-color: #ffffff !important;
-    border-color: rgba(0,0,0,0.06);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-}
-.navbar-brand img {
-    height: 46px;
-    width: auto;
-    margin: 8px 0;
-}
-
-/* Banner and background */
-.section_banner { 
-  position: relative; 
-  min-height: calc(100vh - 70px); 
-  overflow: hidden;
-}
-.carousel-inner, .item { 
-  height: calc(100vh - 70px); 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-}
-.banner__carousel__img, .backstretch { 
-  position: absolute; 
-  top: 0; 
-  left: 0; 
-  width: 100%; 
-  height: 100%; 
-}
-.backstretch img { 
-  width: 100%; 
-  height: 100%; 
-  object-fit: cover; 
-  object-position: center center;
-}
-.section_banner::after {
-    content: '';
-    position: absolute; inset: 0;
-    /* Lighter blue overlay to match reference */
-    background: linear-gradient(
-        180deg,
-        rgba(46, 114, 197, 0.28) 0%,
-        rgba(32, 98, 170, 0.28) 40%,
-        rgba(10, 26, 42, 0.42) 100%
-    );
-    pointer-events: none;
-}
-
-/* Center the hero content block */
-.section_banner .container { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-.section_banner .row, .section_banner .col-sm-12 { width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-
-/* Headings and copy */
-.page-header { color: #0b2141 !important; font-size: 44px; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 700; text-shadow: none; margin-bottom: 18px; }
-.page-subheader { text-align: center; }
-.page-subheader p { color: #333333 !important; font-weight: 600; font-size: 17px; letter-spacing: 0.2px; display: inline-block; position: relative; }
-.page-subheader p::after { content: ''; display: none; height: 0; }
-
-/* Code display with lines */
-.bigtext { color: #0b2141; font-family: 'Montserrat', 'Arial', sans-serif; font-weight: 700; font-size: 48px; letter-spacing: 1.5px; text-shadow: none; position: relative; margin: 26px auto 24px; max-width: 980px; }
-.bigtext::before, .bigtext::after { content: ''; display: block; }
-.bigtext::before { display: none; }
-.bigtext::after {
-    content: '';
-    display: block;
-    height: 2px;
-    background: rgba(0,0,0,0.15);
-    border-radius: 2px;
-    margin: 18px auto 0;
-    width: 90%;
-}
-
-/* Primary button */
-.btn { font-weight: 800; text-transform: uppercase; letter-spacing: 2px; font-family: 'Montserrat', 'Arial', sans-serif; color: #ffffff !important; }
-.btn-primary { 
-    background: linear-gradient(180deg, #2e6fbe 0%, #1f5aa6 100%) !important;
-    border: 1px solid rgba(255,255,255,0.15);
-    padding: 18px 38px;
-    border-radius: 42px;
-    box-shadow: 0 10px 24px rgba(25,55,110,0.45);
-    font-size: 16px;
-    color: #ffffff !important;
-    text-shadow: 0 1px 0 rgba(0,0,0,0.25);
-}
-.btn-primary:hover { 
-    background: linear-gradient(180deg, #3a7dd0 0%, #2466b3 100%) !important;
-    color: #ffffff !important;
-    transform: translateY(-1px);
-}
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(30,60,114,0.55); }
-
-/* Footer positioning and cleanup */
-.section_footer { background: transparent; border: 0; position: fixed; left: 18px; right: 18px; bottom: 14px; padding: 0; }
-.footer__copyright { color: #114b9a; }
-.footer__copyright a { color: #114b9a !important; text-decoration: none; }
-.footer__copyright a:hover { text-decoration: underline; }
-.footer__social { 
-    list-style: none; 
-    margin: 0; 
-    padding: 0; 
-    display: flex; 
-    justify-content: flex-end; 
-    gap: 15px; 
-}
-
-.footer__social li {
-    display: inline-block;
-}
-
-.footer__social a {
-    display: inline-block;
-    width: 40px;
-    height: 40px;
-    background: #e5e7eb;
-    border-radius: 50%;
-    color: #6b7280;
-    text-align: center;
-    line-height: 40px;
-    font-size: 16px;
-    text-decoration: none;
-    transition: all 0.3s ease;
-}
-
-.footer__social a:hover {
-    background: #1b4b96;
-    color: white;
-}
-
-/* Twitter/X Icon */
-.footer__social .twitter {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236b7280'%3E%3Cpath d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'/%3E%3C/svg%3E");
-    background-size: 20px 20px;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* Facebook Icon */
-.footer__social .facebook {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236b7280'%3E%3Cpath d='M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z'/%3E%3C/svg%3E");
-    background-size: 20px 20px;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* YouTube Icon */
-.footer__social .youtube {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236b7280'%3E%3Cpath d='M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z'/%3E%3C/svg%3E");
-    background-size: 20px 20px;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* Instagram Icon */
-.footer__social .instagram {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%236b7280'%3E%3Cpath d='M12.017 0C8.396 0 7.927.01 6.684.072 5.443.134 4.597.27 3.842.512c-.789.306-1.459.717-2.126 1.384S.668 3.053.36 3.842C.118 4.597-.018 5.443-.08 6.684-.142 7.927-.152 8.396-.152 12.017c0 3.624.01 4.09.072 5.333.062 1.24.198 2.086.44 2.841.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.756.242 1.602.378 2.841.44C7.927 23.99 8.396 24 12.017 24c3.624 0 4.09-.01 5.333-.072 1.24-.062 2.086-.198 2.841-.44.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.242-.756.378-1.602.44-2.841.062-1.24.072-1.709.072-5.333 0-3.621-.01-4.09-.072-5.333-.062-1.24-.198-2.086-.44-2.841-.306-.788-.718-1.459-1.384-2.126C19.76.668 19.091.256 18.302-.05 17.547-.292 16.701-.428 15.46-.49 14.217-.552 13.748-.562 12.017-.562c-3.624 0-4.09.01-5.333.072-1.24.062-2.086.198-2.841.44-.788.306-1.459.718-2.126 1.384-.666.667-1.079 1.335-1.384 2.126-.242.756-.378 1.602-.44 2.841C.01 7.927 0 8.396 0 12.017c0 3.624.01 4.09.072 5.333.062 1.24.198 2.086.44 2.841.306.788.718 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.756.242 1.602.378 2.841.44 1.24.062 1.709.072 5.333.072z'/%3E%3Cpath d='M12.017 5.838a6.18 6.18 0 1 0 0 12.359 6.18 6.18 0 0 0 0-12.36zM12.017 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM18.4 4.155a1.44 1.44 0 0 0-2.88 0 1.44 1.44 0 0 0 2.88 0z'/%3E%3C/svg%3E");
-    background-size: 18px 18px;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-/* Center navbar brand/logo */
-.navbar { position: sticky; top: 0; z-index: 5; }
-.navbar .container { display: flex; align-items: center; justify-content: flex-start; padding-left: 24px; padding-right: 24px; }
-.navbar-header { float: none; }
-.navbar-brand { float: none; margin: 0; display: inline-flex; align-items: center; }
-
-/* push logo a bit further left on large screens */
-@media (min-width: 1200px) {
-  .navbar .container { padding-left: 48px; }
-}
-
-/* Animation classes */
-.animate-down {
-    animation: fadeInDown 1s ease-out;
-}
-
-.animate-xs-step-0 {
-    animation-delay: 0s;
-}
-
-.animate-xs-step-1 {
-    animation-delay: 0.2s;
-}
-
-@keyframes fadeInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Utility classes */
-.text-white {
-    color: white !important;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.text-white-muted {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-/* Form styles */
-.authform {
-    margin-bottom: 30px;
-}
-
-.field-validation-valid {
-    display: none;
-}
-
-/* Section styles */
-.section_features {
-    padding: 60px 0;
-}
-
-#authresponse {
-    min-height: 200px;
-}
-
+/* ========================================================
+   GAT Sport — Merged styles.css
+   Combines: deployed (production) + updated UI (colleague)
+   Updated UI rules come *after* base/deployment pieces so they override.
+   ======================================================== */
+
+/* =========================
+   Reset & Base
+   ========================= */
+   * { margin: 0; padding: 0; box-sizing: border-box; }
+
+   :root {
+     --gat-blue: #114b9a;
+     --text-light: #e8f0ff;
+     --muted: rgba(232, 240, 255, 0.85);
+     --underline-light: rgba(210, 230, 255, 0.9);
+     --underline-dark: rgba(10, 30, 60, 0.85);
+   }
+   
+   html, body { min-height: 100%; }
+   
+   body {
+     font-family: "Montserrat", Arial, sans-serif;
+     line-height: 1.6;
+     color: #111;
+     background: #fff;
+     overflow-x: hidden;
+     position: relative;
+     min-height: 100vh;
+   }
+   
+   /* Generic container (keep production width) */
+   .container {
+     max-width: 1100px;
+     margin: 0 auto;
+     padding: 20px;
+     position: relative;
+     z-index: 1;
+   }
+   
+   /* =========================
+      NAVBAR / HERO / BANNER
+      (keeps the production look but uses updated UI sizing & overlay)
+      ========================= */
+   .navbar-inverse {
+     background-color: #fff !important;
+     border-color: rgba(0,0,0,0.06);
+     box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+   }
+   .navbar { position: sticky; top: 0; z-index: 5; }
+   .navbar .container { display:flex; align-items:center; justify-content:flex-start; padding:0 24px; }
+   .navbar-header, .navbar-brand { float:none; margin:0; display:inline-flex; align-items:center; }
+   .navbar-brand img { height:46px; width:auto; margin:8px 0; }
+   
+   .section_banner {
+     position: relative;
+     min-height: 100vh;
+     overflow: hidden;
+   }
+   .carousel-inner, .item {
+     height: 100vh;
+     display:flex;
+     align-items:center;
+     justify-content:center;
+   }
+   .banner__carousel__img, .backstretch { position:absolute; inset:0; }
+   .backstretch img { width:100%; height:100%; object-fit:cover; object-position:center; }
+   
+   /* blue overlay for readability (updated UI) */
+   .section_banner::after {
+     content: "";
+     position: absolute;
+     inset: 0;
+     background: linear-gradient(
+       180deg,
+       rgba(46,114,197,0.28) 0%,
+       rgba(32,98,170,0.28) 40%,
+       rgba(10,26,42,0.42) 100%
+     );
+     pointer-events: none;
+   }
+   
+   /* center hero content */
+   .section_banner .container { position:relative; z-index:2; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+   .section_banner .row, .section_banner .col-sm-12 { width:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+   
+   /* =========================
+      Headings & Copy
+      ========================= */
+   .page-header {
+     color: #0b2141 !important;
+     font-size: clamp(20px, 2.6vw, 36px);
+     letter-spacing: 0.5px;
+     text-transform: uppercase;
+     font-weight: 400;
+     font-family: 'Oswald', 'Montserrat', Arial, sans-serif;
+     text-shadow: none;
+     margin-bottom: 18px;
+   }
+   .page-subheader p {
+     color: #333 !important;
+     font-weight: 400;
+     font-size: clamp(12px, 1.3vw, 16px);
+     letter-spacing: 0.2px;
+     display:inline-block;
+   }
+   
+   /* =========================
+      Code display / hero underline
+      ========================= */
+   .bigtext {
+     color: #fff !important;
+     font-family: 'Oswald', 'Montserrat', Arial, sans-serif;
+     font-weight: 400;
+     font-size: clamp(22px, 3.2vw, 42px);
+     letter-spacing: 1.5px;
+     margin: 26px auto 12px;
+     max-width: 980px;
+   }
+   
+   /* code underline — two places (full-width 100vw + inner narrower rule)
+      Keep both implementations so markup variations work; updated rules override where needed */
+   .section_banner > .code-underline {
+     width: 100vw;
+     height: 0;
+     border-top: 1px solid var(--underline-light);
+     border-bottom: 2px solid var(--underline-dark);
+     box-shadow: 0 0.25px 0 rgba(0,0,0,0.15) inset;
+     margin: 12px 0 18px;
+     position: relative;
+     left: 50%;
+     transform: translateX(-50%);
+     pointer-events: none;
+   }
+   .section_banner .code-underline {
+     width: 88vw;
+     max-width: 1300px;
+     margin: 12px 0 18px;
+     left: 50%;
+     transform: translateX(-50%);
+     height: 0;
+     border-top: 2px solid #000;
+     box-shadow: none;
+     pointer-events: none;
+   }
+   
+   /* =========================
+      Buttons
+      ========================= */
+   .btn { font-family:'Oswald','Montserrat',Arial,sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:2px; color:#fff !important; text-decoration:none !important; cursor:pointer; }
+   a.btn, a.btn-primary { text-decoration:none !important; }
+   .btn-primary {
+     background: #1f5aa6 !important;
+     border: none;
+     padding: 18px 38px;
+     border-radius: 42px;
+     box-shadow: none;
+     font-size: 16px;
+     transition: background 0.2s ease;
+   }
+   .btn-primary:hover { background:#2466b3 !important; }
+   
+   /* left-align CTA style (updated) */
+   .left-align { text-align:left; }
+   .left-align .btn-primary { border-radius:22px; padding:16px 28px; font-weight:800; letter-spacing:1.2px; }
+   
+   /* legacy verify button style (from deployed) — keep as utility if .verify-btn is used */
+   .verify-btn {
+     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+     color: white;
+     border: none;
+     padding: 28px 55px;
+     border-radius: 18px;
+     font-size: 1.4rem;
+     font-weight: bold;
+     cursor: pointer;
+     transition: all 0.4s ease;
+     text-transform: uppercase;
+     letter-spacing: 3px;
+     box-shadow: 0 12px 35px rgba(30, 60, 114, 0.5);
+     position: relative;
+     overflow: hidden;
+     margin-top: 20px;
+   }
+   .verify-btn::before {
+     content: '';
+     position: absolute;
+     top: 0;
+     left: -100%;
+     width: 100%;
+     height: 100%;
+     background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+     transition: left 0.6s;
+   }
+   .verify-btn:hover::before { left: 100%; }
+   .verify-btn:hover { transform: translateY(-4px); box-shadow: 0 18px 45px rgba(30,60,114,0.7); }
+   
+   /* =========================
+      Auth response / Guilloche, Images, Modals
+      ========================= */
+   
+   /* Inline verification spacing/layout */
+   #authresponse .page-header { margin: 40px 0 22px; }
+   #authresponse hr {
+     border: 0;
+     height: 1px;
+     background: rgba(0,0,0,0.12);
+     margin: 24px 0 36px;
+   }
+   #authresponse p { margin: 10px 0 18px; color: #3f4a5a; }
+   
+   /* Guilloche image & pattern sizes (kept from deployed) */
+   #authresponse #guillocheImage {
+     width: 420px;
+     height: 420px;
+     border-radius: 50%;
+     object-fit: cover;
+     box-shadow: 0 0 0 6px #000 inset, 0 8px 24px rgba(0,0,0,0.08);
+     margin: 20px auto 60px;
+     display: block;
+     max-width: 100%;
+   }
+   #authresponse #guillochePattern {
+     width: 360px;
+     height: 360px;
+     box-shadow: 0 0 0 4px #e6e6e6 inset, 0 8px 24px rgba(0,0,0,0.08);
+     margin: 20px auto 60px;
+     max-width: 100%;
+   }
+   
+   /* Fallback guilloche-pattern decorative defaults (keeps deployed vivid gradient look) */
+   .guilloche-pattern {
+     width: 280px;
+     height: 280px;
+     border-radius: 50%;
+     position: relative;
+     animation: rotate 15s linear infinite;
+     box-shadow: 0 0 40px rgba(255,255,255,0.3);
+   }
+   .guilloche-pattern::before {
+     content: '';
+     position: absolute;
+     top: 20px; left: 20px; right: 20px; bottom: 20px;
+     border-radius: 50%;
+     background: #0a1a2a;
+   }
+   .guilloche-pattern::after {
+     /* inner secondary ring */
+     content: '';
+     position: absolute;
+     top: 50px; left: 50px; right: 50px; bottom: 50px;
+     border-radius: 50%;
+     background: conic-gradient(from 180deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3, #54a0ff, #5f27cd, #ff6b6b);
+   }
+   
+   /* rotate animation for guilloche */
+   @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+   
+   /* Modal styles — preserve the production modal visual treatment (deep gradient + rounded card) */
+   .modal {
+     position: fixed;
+     top: 0; left: 0; width: 100%; height: 100%;
+     background: rgba(0,0,0,0.95);
+     display:flex; align-items:center; justify-content:center;
+     z-index:1000; backdrop-filter: blur(8px);
+   }
+   .modal-content {
+     background: linear-gradient(135deg, #0a1a2a 0%, #1a2a3a 100%);
+     border-radius: 25px;
+     padding: 60px;
+     max-width: 750px;
+     width: 90%;
+     max-height: 90vh;
+     overflow-y: auto;
+     text-align: center;
+     box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+     border: 1px solid rgba(255,255,255,0.15);
+     position: relative;
+   }
+   .modal-content::before {
+     content: ''; position:absolute; top:0; left:0; right:0; bottom:0;
+     background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+     border-radius:25px; z-index:-1;
+   }
+   .success-icon { font-size:6rem; color:#28a745; margin-bottom:30px; text-shadow:0 0 25px rgba(40,167,69,0.6); }
+   .success-title { color:#28a745; font-size:2.2rem; margin-bottom:25px; font-weight:bold; text-transform:uppercase; letter-spacing:3px; text-shadow:0 2px 4px rgba(0,0,0,0.5); }
+   .success-message { color:#b8c5d6; font-size:1.3rem; margin-bottom:50px; line-height:1.7; font-weight:300; }
+   
+   /* Error variant */
+   .modal-content.error { border-left:6px solid #dc3545; }
+   .error-icon { font-size:6rem; color:#dc3545; margin-bottom:30px; text-shadow:0 0 25px rgba(220,53,69,0.6); }
+   .error-title { color:#dc3545; font-size:2.2rem; margin-bottom:25px; font-weight:bold; text-transform:uppercase; letter-spacing:3px; text-shadow:0 2px 4px rgba(0,0,0,0.5); }
+   .error-message { color:#b8c5d6; font-size:1.3rem; margin-bottom:40px; line-height:1.7; font-weight:300; }
+   
+   .close-btn {
+     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+     color: white; border: none; padding:18px 35px; border-radius:12px; cursor:pointer; font-size:1.1rem; margin-top:40px;
+     transition: all 0.3s; text-transform:uppercase; letter-spacing:2px; font-weight:bold;
+   }
+   .close-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(30,60,114,0.5); }
+   
+   /* Comparison instructions box */
+   .comparison-instructions {
+     text-align:left; margin-top:40px;
+     background: rgba(255,255,255,0.08); padding:30px; border-radius:20px; border:1px solid rgba(255,255,255,0.15);
+   }
+   .comparison-instructions h4 { color:white; margin-bottom:25px; font-size:1.3rem; text-transform:uppercase; letter-spacing:2px; }
+   .comparison-instructions ol { padding-left:30px; }
+   .comparison-instructions li { margin-bottom:15px; color:white; line-height:1.6; font-weight:300; }
+   
+   /* =========================
+      Loading Overlay (updated UI)
+      ========================= */
+   .loading-overlay {
+     position: fixed;
+     left: 0; right: 0;
+     display: none;
+     justify-content: center;
+     align-items: center;
+     background-color: #333;
+     z-index: 10000;
+     flex-direction: column;
+     text-align: center;
+     color: white;
+     font-family: Arial, sans-serif;
+   }
+   .loading-title { font-size:24px; letter-spacing:1px; font-weight:bold; margin-bottom:20px; }
+   .loading-spinner {
+     border: 4px solid rgba(255,255,255,0.2);
+     border-top: 4px solid orange;
+     border-radius: 50%;
+     width: 50px; height: 50px; animation: spin 1s linear infinite;
+   }
+   @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+   
+   /* =========================
+      Footer (updated UI — fixed bottom white strip)
+      ========================= */
+   .section_footer {
+     position: fixed;
+     left: 0; right: 0; bottom: 0; padding: 10px 0; background: #fff;
+     border-top: 1px solid rgba(0,0,0,0.06); z-index: 5;
+   }
+   .section_footer > div { width:100%; margin:0; padding:0 18px; }
+   .section_footer .row { display:flex; align-items:center; justify-content:space-between; margin:0; }
+   .footer__copyright, .footer__copyright a { color: var(--gat-blue); text-decoration:none; }
+   .footer__social { list-style:none; margin:0; padding:0; display:flex; justify-content:flex-end; gap:15px; }
+   .footer__social li { display:inline-flex; width:40px; height:40px; padding:0; margin:0; align-items:center; justify-content:center; }
+   .footer__social a {
+     display:inline-block; width:40px; height:40px; border-radius:50%; background:#e5e7eb; background-repeat:no-repeat; background-position:center;
+     transition: background-color 0.2s ease;
+   }
+   .footer__social a:hover { background-color:#d1d5db !important; }
+   
+   /* social glyphs (ensure visible) */
+   .footer__social .twitter { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%231b4b96'%3E%3Cpath d='M23 3a10.9 10.9 0 01-3.14 1.53A4.48 4.48 0 0016.5 3c-2.5 0-4.5 2.24-3.95 4.64A12.94 12.94 0 013 4s-4 9 5 13a13.38 13.38 0 01-8 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z'/%3E%3C/svg%3E"); background-size:20px 20px; }
+   .footer__social .facebook { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%231b4b96' d='M14.5 3H13c-2.2 0-3.5 1.4-3.5 3.6V9H7v3h2.5v6h3v-6H15l.5-3h-3V6.1c0-.6.2-1.1 1.1-1.1H15V3z'/%3E%3C/svg%3E"); background-size:20px 20px; }
+   .footer__social .youtube { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='4.5' y='7' width='15' height='10' rx='2.5' ry='2.5' fill='%231b4b96'/%3E%3Cpolygon points='11,9 11,15 16,12' fill='%23ffffff'/%3E%3C/svg%3E"); background-size:20px 20px; }
+   .footer__social .instagram { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='4' y='4' width='16' height='16' rx='3' fill='%231b4b96'/%3E%3Ccircle cx='12' cy='12' r='4' fill='none' stroke='%23ffffff' stroke-width='2'/%3E%3Ccircle cx='17' cy='7' r='1.3' fill='%23ffffff'/%3E%3C/svg%3E"); background-size:18px 18px; }
+   
+   /* Make GAT Gear and About Us images responsive */
+   .section_features .img-responsive { display:block; width:100%; height:auto; max-width:100%; }
+   
+   /* =========================
+      Utility classes & small production helpers
+      ========================= */
+   .text-white { color: #fff !important; }
+   .text-white-muted { color: var(--muted); }
+   .text-center { text-align: center; }
+   .authform { margin-bottom: 30px; }
+   .field-validation-valid { display: none; }
+   .section_features { padding: 60px 0; }
+   #authresponse { min-height: 0; padding: 0; }
+   
+   /* small override for preverify hide (updated UI uses .preverify-hidden) */
+   .preverify-hidden { display: none; }
+   
+   /* small production-specific hero/card styling kept for auth area (from deployed) */
+   .verify-main { display:flex; align-items:center; justify-content:center; min-height:100vh; text-align:center; padding:0 20px; }
+   .auth-content {
+     background: rgba(255,255,255,0.08);
+     backdrop-filter: blur(15px);
+     border-radius: 25px;
+     padding: 70px 60px;
+     max-width: 650px; width:100%;
+     border:1px solid rgba(255,255,255,0.15);
+     box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+     position: relative;
+   }
+   .auth-content::before {
+     content: ''; position:absolute; top:0; left:0; right:0; bottom:0;
+     background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+     border-radius:25px; z-index:-1;
+   }
+   
+   /* =========================
+      Responsive (combined & harmonized)
+      ========================= */
+   @media (max-width: 992px) {
+     .left-align { text-align: center; }
+     .left-align .btn-primary { display:inline-block; margin:0 auto; }
+   }
+   
+   @media (max-width: 768px) {
+     body { overflow-x: hidden; }
+     .container { padding: 10px; max-width:100%; }
+     .navbar .container { padding: 10px 15px; }
+     .navbar-brand img { height: 35px; }
+     .section_banner { min-height: 100vh; padding: 0; }
+     .carousel-inner, .item { height: 100vh; padding: 20px 0; }
+     .banner__carousel__img { position: fixed; top:0; left:0; width:100%; height:100%; z-index:-1; }
+     .backstretch img { width:100%; height:100%; object-fit:cover; object-position:center; }
+     .section_banner .container { z-index:2; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; padding:60px 20px 20px; }
+     .page-header { font-size: 24px !important; line-height:1.2; margin-bottom:15px; padding:0 10px; }
+     .page-subheader p { font-size: 14px !important; line-height:1.4; margin-bottom:30px; padding:0 10px; }
+     .bigtext { font-size:28px !important; letter-spacing:1px; margin:20px auto 6px; padding:0 10px; }
+     .btn-primary { padding:15px 30px; font-size:14px; letter-spacing:1px; margin:20px 0; }
+     .modal-content { padding:30px 20px; margin:10px; border-radius:15px; max-height:95vh; overflow-y:auto; }
+     .guilloche-pattern { width:200px; height:200px; }
+     .success-icon, .error-icon { font-size:4rem; }
+     .success-title, .error-title { font-size:1.6rem; line-height:1.2; }
+     .success-message, .error-message { font-size:1.1rem; line-height:1.4; }
+     .section_features { padding:40px 0; }
+     .section_features img { width:100%; height:auto; object-fit:contain; }
+     .feaure_utility .container { padding:0 20px; }
+     .feaure_utility .page-header { font-size:22px !important; margin-bottom:20px; }
+     .feaure_utility p { font-size:14px; line-height:1.5; margin-bottom:15px; padding:0 10px; }
+     .section_footer .row { flex-direction:column; align-items:center; gap:10px; }
+     .footer__copyright { width:100%; text-align:center; margin:0; }
+     .footer__social { justify-content:center; gap:12px; }
+     .footer__social a { width:36px; height:36px; }
+   }
+   
+   @media (max-width: 480px) {
+     .page-header { font-size:20px !important; line-height:1.1; }
+     .bigtext { font-size:24px !important; letter-spacing:0.5px; }
+     .btn-primary { padding:12px 25px; font-size:12px; }
+     .modal-content { padding:20px 15px; margin:5px; }
+     .guilloche-pattern { width:160px; height:160px; }
+     .success-icon, .error-icon { font-size:3.5rem; }
+     .section_features { padding:30px 0; }
+     .feaure_utility .page-header { font-size:18px !important; }
+     .feaure_utility p { font-size:12px; }
+   }
+   
+   /* tiny screens */
+   @media (max-width: 360px) {
+     .page-header { font-size:18px !important; }
+     .bigtext { font-size:20px !important; }
+     .btn-primary { padding:10px 20px; font-size:11px; }
+     .guilloche-pattern { width:140px; height:140px; }
+   }
+   
+   /* Keep pointer hand for interactive elements (both variants) */
+   .btn, .btn-primary, .authbutton, .verify-btn { cursor: pointer; text-decoration: none !important; }
+   
+   /* Remove aggressive transforms on focus/hover (keep accessibility) */
+   .btn:hover, .btn-primary:hover, .authbutton:hover, .verify-btn:hover,
+   .btn:focus, .btn-primary:focus, .authbutton:focus, .verify-btn:focus,
+   .btn:active, .btn-primary:active, .authbutton:active, .verify-btn:active {
+     box-shadow: none !important;
+     transform: none !important;
+     outline: none !important;
+     text-decoration: none !important;
+   }
+   
+   /* Small helper for older markup that referenced .background-image */
+   .background-image, .background-image::before { display: none; }
+   
+   /* Final minor production helper (keep root colors accessible) */
+   :root { --primary: var(--gat-blue); }
+   
