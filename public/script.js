@@ -1,3 +1,28 @@
+// R2_BASE: Cloudflare R2 public development URL (set to your bucket)
+// Replace the hostname below with the Public Development URL shown in your R2 bucket.
+const R2_BASE = "https://pub-13edf9061d124849897438f055509087.r2.dev/images/";
+
+function buildImageUrl(code) {
+  if (!code) return "";
+  let raw = String(code).trim();
+
+  // If already a full URL, use directly
+  if (raw.toLowerCase().startsWith("http://") || raw.toLowerCase().startsWith("https://")) return raw;
+
+  // If already a filename like guilloche_123.png, just append to R2 base
+  if (raw.startsWith("guilloche_") && raw.toLowerCase().endsWith(".png")) {
+    return `${R2_BASE}${raw}`;
+  }
+
+  // Strip any leading slashes
+  raw = raw.replace(/^\/+/, "");
+
+  // Build standard filename
+  const filename = raw.startsWith("guilloche_") ? raw : `guilloche_${raw}.png`;
+  return `${R2_BASE}${filename}`;
+}
+
+
 // Main verification page JavaScript functionality
 
 let currentProductCode = '';
@@ -18,10 +43,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (res.ok) {
             codesMap = await res.json();
         } else {
-            console.error('Failed to load codes.json:', res.status);
+            console.warn('codes.json not found on server, falling back to direct R2 mapping.');
+            codesMap = null;
         }
     } catch (e) {
-        console.error('Error loading codes.json:', e);
+        console.warn('Error loading codes.json, falling back to direct R2 mapping.', e);
+        codesMap = null;
     }
 
     // Always auto-verify when code present in this flow
@@ -127,6 +154,61 @@ function renderInlineError(message) {
 }
 
 // Verify the product (purely client-side)
+// async function verifyProduct(verifyBtn) {
+//     try {
+//         if (!currentProductCode) {
+//             if (verifyBtn) {
+//                 verifyBtn.style.opacity = '1';
+//                 verifyBtn.textContent = 'VERIFY MY PRODUCT';
+//             }
+//             renderInlineError('No code provided.');
+//             return;
+//         }
+//         if (!codesMap || !codesMap[currentProductCode]) {
+//             if (verifyBtn) {
+//                 verifyBtn.style.opacity = '1';
+//                 verifyBtn.textContent = 'VERIFY MY PRODUCT';
+//             }
+//             renderInlineError('Invalid product code.');
+//             return;
+//         }
+//         // const entry = codesMap[currentProductCode] || {};
+//         let entry = null;
+//         if (codesMap && codesMap[currentProductCode]) {
+//             entry = codesMap[currentProductCode];
+//         }
+//         const product = {
+//             code: currentProductCode,
+//             imageUrl: entry.imageUrl || `/images/guilloche_${currentProductCode}.png`,
+//             name: entry.name || 'GAT Sport Product',
+//             description: entry.description || 'Authentic GAT Sport supplement'
+//         };
+
+//         if (verifyBtn) {
+//             verifyBtn.style.opacity = '1';
+//             verifyBtn.textContent = 'VERIFY MY PRODUCT';
+//         }
+
+//         renderInlineSuccess(product);
+//         const gearSection = document.getElementById('section_utility1');
+//         if (gearSection) gearSection.style.display = 'block';
+//         const aboutSection = document.getElementById('section_utility2');
+//         if (aboutSection) aboutSection.style.display = 'block';
+//         const resultSection = document.getElementById('authresponse');
+//         if (resultSection && typeof resultSection.scrollIntoView === 'function') {
+//             resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+//         }
+//     } catch (error) {
+//         console.error('Error verifying product:', error);
+//         if (verifyBtn) {
+//             verifyBtn.style.opacity = '1';
+//             verifyBtn.textContent = 'VERIFY MY PRODUCT';
+//         }
+//         renderInlineError('Unexpected error. Please try again.');
+//     }
+// }
+
+// Verify the product (purely client-side)
 async function verifyProduct(verifyBtn) {
     try {
         if (!currentProductCode) {
@@ -137,7 +219,15 @@ async function verifyProduct(verifyBtn) {
             renderInlineError('No code provided.');
             return;
         }
-        if (!codesMap || !codesMap[currentProductCode]) {
+
+        // Get entry from manifest if available
+        let entry = null;
+        if (codesMap && codesMap[currentProductCode]) {
+            entry = codesMap[currentProductCode];
+        }
+
+        // If manifest exists but entry missing -> treat as invalid code
+        if (codesMap && !entry) {
             if (verifyBtn) {
                 verifyBtn.style.opacity = '1';
                 verifyBtn.textContent = 'VERIFY MY PRODUCT';
@@ -145,12 +235,13 @@ async function verifyProduct(verifyBtn) {
             renderInlineError('Invalid product code.');
             return;
         }
-        const entry = codesMap[currentProductCode] || {};
+
+        // Build product object, preferring manifest data; fallback to R2 direct URL
         const product = {
             code: currentProductCode,
-            imageUrl: entry.imageUrl || `/images/guilloche_${currentProductCode}.png`,
-            name: entry.name || 'GAT Sport Product',
-            description: entry.description || 'Authentic GAT Sport supplement'
+            imageUrl: (entry && (entry.imageUrl || entry.image_url)) || buildImageUrl(currentProductCode),
+            name: (entry && entry.name) || 'GAT Sport Product',
+            description: (entry && entry.description) || 'Authentic GAT Sport supplement'
         };
 
         if (verifyBtn) {
@@ -158,7 +249,10 @@ async function verifyProduct(verifyBtn) {
             verifyBtn.textContent = 'VERIFY MY PRODUCT';
         }
 
+        console.log('verifyProduct -> product', product); // debug log
+
         renderInlineSuccess(product);
+
         const gearSection = document.getElementById('section_utility1');
         if (gearSection) gearSection.style.display = 'block';
         const aboutSection = document.getElementById('section_utility2');
@@ -176,6 +270,7 @@ async function verifyProduct(verifyBtn) {
         renderInlineError('Unexpected error. Please try again.');
     }
 }
+
 
 function showSuccessModal() {}
 function showErrorModal(message) {}
