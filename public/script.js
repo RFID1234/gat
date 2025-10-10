@@ -1,7 +1,5 @@
 // ============================================================
-// ✅ GAT Sport Verification Script — Merged Final Version
-// Combines deployment logic (R2 mapping, codes.json handling)
-// with new UI (loading overlay, smooth scroll, updated layout)
+// ✅ GAT Sport Verification Script — Netlify-ready final
 // ============================================================
 
 // R2_BASE: Cloudflare R2 public development URL (set to your bucket)
@@ -301,9 +299,111 @@ function renderInlineError(message) {
 }
 
 // ============================================================
-// Verification Logic with Minimum Loading Time
+// === NEW: helpers to call server verify and lazy-load colleague assets (Netlify-only)
 // ============================================================
 
+function getNetlifyVerifyEndpoint() {
+  // Netlify function endpoint
+  return '/.netlify/functions/verify';
+}
+
+async function callVerifyCounter(code) {
+  try {
+    const endpoint = getNetlifyVerifyEndpoint();
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code })
+    });
+    if (!res.ok) {
+      console.warn('verify endpoint non-ok', res.status);
+      return null;
+    }
+    const json = await res.json();
+    // json: { success: true|false, product?, count? }
+    if (json && typeof json.count !== 'undefined') return Number(json.count);
+    return null;
+  } catch (e) {
+    console.warn('callVerifyCounter error:', e);
+    return null;
+  }
+}
+
+function loadCSS(href) {
+  return new Promise((resolve, reject) => {
+    if (!href) return resolve();
+    if (document.querySelector(`link[data-dynamic="${href}"]`)) return resolve();
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = href;
+    link.setAttribute('data-dynamic', href);
+    link.onload = () => resolve();
+    link.onerror = () => reject(new Error('Failed to load CSS: ' + href));
+    document.head.appendChild(link);
+  });
+}
+function loadJS(src) {
+  return new Promise((resolve, reject) => {
+    if (!src) return resolve();
+    if (document.querySelector(`script[data-dynamic="${src}"]`)) return resolve();
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = false;
+    s.setAttribute('data-dynamic', src);
+    s.onload = () => resolve();
+    s.onerror = () => reject(new Error('Failed to load JS: ' + src));
+    document.body.appendChild(s);
+  });
+}
+
+// ============================================================
+// === NEW: render counterfeit UI (fetches /counterfeit/fragment.html)
+// ============================================================
+async function renderCounterfeitUI(context = {}) {
+  try {
+    showLoadingOverlaySized();
+
+    // load colleague styles + script (adjust names to actual files you placed)
+    await loadCSS('/counterfeit/counterfeitstyles.css').catch(()=>{});
+    await loadJS('/counterfeit/counterfeitscript.js').catch(()=>{});
+    await loadJS('/counterfeit/contacts.js').catch(()=>{});
+
+    const res = await fetch('/counterfeit/fragment.html', { cache: 'no-cache' });
+    if (!res.ok) {
+      hideLoadingOverlay();
+      renderInlineError('Could not load counterfeit UI. Please try again later.');
+      return;
+    }
+    const text = await res.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(text, 'text/html');
+    const bodyHTML = (doc.body && doc.body.innerHTML) ? doc.body.innerHTML.trim() : text;
+
+    const section = renderInlineContainer();
+    if (!section) {
+      hideLoadingOverlay();
+      renderInlineError('Internal error: display container not found.');
+      return;
+    }
+    section.innerHTML = bodyHTML;
+
+    hideLoadingOverlay();
+    smoothScrollToResults();
+
+    // optional init function the colleague script may expose
+    if (window.initCounterfeitForm) {
+      try { window.initCounterfeitForm(); } catch(e){ console.warn('initCounterfeitForm err', e); }
+    }
+  } catch (err) {
+    console.error('renderCounterfeitUI error:', err);
+    hideLoadingOverlay();
+    renderInlineError('Unable to show counterfeit UI.');
+  }
+}
+
+// ============================================================
+// Verification Logic with Minimum Loading Time (UPDATED for Netlify)
+// ============================================================
 async function verifyProductWithMinTime() {
   const startTime = Date.now();
   const minLoadingTime = 2000;
@@ -335,8 +435,25 @@ async function verifyProductWithMinTime() {
       description: (entry && entry.description) || 'Authentic GAT Sport supplement'
     };
 
+    // Call Netlify serverless verify to increment counter & get count
+    const count = await callVerifyCounter(currentProductCode);
+
+    // Wait minimum loading time
     await delayRemaining(startTime, minLoadingTime);
-    renderInlineSuccess(product);
+
+    if (count === null) {
+      // failsafe: show success if server unavailable
+      renderInlineSuccess(product);
+      return;
+    }
+
+    // Branch: <=10 authentic ; >10 counterfeit
+    if (Number(count) > 10) {
+      await renderCounterfeitUI({ code: currentProductCode, count });
+    } else {
+      renderInlineSuccess(product);
+    }
+
   } catch (error) {
     console.error('Error verifying product:', error);
     await delayRemaining(startTime, minLoadingTime);
