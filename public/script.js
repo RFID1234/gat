@@ -359,6 +359,9 @@ function loadJS(src) {
 // ============================================================
 // === NEW: render counterfeit UI (fetches /counterfeit/fragment.html)
 // ============================================================
+// ============================================================
+// renderCounterfeitUI - REPLACEMENT
+// ============================================================
 async function renderCounterfeitUI(context = {}) {
   try {
     showLoadingOverlaySized();
@@ -367,6 +370,8 @@ async function renderCounterfeitUI(context = {}) {
     await loadCSS('/counterfeit/counterfeitstyles.css').catch(()=>{});
     await loadJS('/counterfeit/counterfeitscript.js').catch(()=>{});
     await loadJS('/counterfeit/contacts.js').catch(()=>{});
+    // NEW: load our init wiring for the form (must be loaded before calling it)
+    await loadJS('/counterfeit/initCounterfeitForm.js').catch(()=>{});
 
     const res = await fetch('/counterfeit/fragment.html', { cache: 'no-cache' });
     if (!res.ok) {
@@ -385,23 +390,38 @@ async function renderCounterfeitUI(context = {}) {
       renderInlineError('Internal error: display container not found.');
       return;
     }
+
+    // Insert the colleague fragment
     section.innerHTML = bodyHTML;
 
-    // --- Inject the actual product code into the placeholder ---
-    const codePlaceholder = document.getElementById('productCodePlaceholder');
-    if (codePlaceholder) codePlaceholder.textContent = currentProductCode;
-
-    // --- Set hidden input for contact form ---
-    const authCodeInput = document.getElementById('AuthenticationCode');
-    if (authCodeInput) authCodeInput.value = currentProductCode;
+    // --- PREPEND dynamic header for counterfeit case (shows product code & warning) ---
+    // Only inject if it isn't already present
+    if (!section.querySelector('#counterfeitHeader')) {
+      const headerHTML = `
+      <div id="counterfeitHeader" class="container" style="margin-bottom:18px;">
+        <div class="row">
+          <div class="col-12">
+            <h2 class="page-header text-center" style="margin-top:18px;margin-bottom:8px;">Result for '${currentProductCode}'</h2>
+            <div id="counterfeitWarning" style="border-radius:6px;padding:14px;margin-top:8px;">
+              <div style="background:#f8d7da;color:#721c24;padding:12px;border-radius:6px;border:1px solid #f5c6cb;">
+                <strong style="display:block;font-size:16px;margin-bottom:6px;">POSSIBLE COUNTERFEIT</strong>
+                <p style="margin:0;font-size:14px;line-height:1.4;">Your product is a potential counterfeit. Please contact Customer Service for further verification.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>`;
+      section.insertAdjacentHTML('afterbegin', headerHTML);
+    }
 
     hideLoadingOverlay();
     smoothScrollToResults();
 
-    // optional init function the colleague script may expose
+    // After DOM is inserted, ensure the init function is triggered (if present)
     if (window.initCounterfeitForm) {
       try { window.initCounterfeitForm(); } catch(e){ console.warn('initCounterfeitForm err', e); }
     }
+
   } catch (err) {
     console.error('renderCounterfeitUI error:', err);
     hideLoadingOverlay();
