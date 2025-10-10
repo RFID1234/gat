@@ -1,25 +1,40 @@
 // netlify/functions/verify.js
-// Netlify function: validates code against codes.json, increments Upstash counter (INCR)
-// Returns JSON: { success: true, product, count }  (count may be null if Upstash not configured)
+const fs = require('fs');
+const path = require('path');
 
-let codesMap = null;
-try {
-  // Try a few relative paths so it works regardless of where codes.json is in repo
-  try { codesMap = require('../../codes.json'); } catch (e1) {}
-  if (!codesMap) {
-    try { codesMap = require('../codes.json'); } catch (e2) {}
+// Helper: try to load codes.json from a few likely locations
+function loadCodesJson() {
+  const tries = [
+    path.join(process.cwd(), 'codes.json'),                  // repo root
+    path.join(process.cwd(), 'public', 'api', 'codes.json'),// public/api/codes.json (served to client)
+    path.join(process.cwd(), 'public', 'codes.json'),       // public/codes.json
+    path.join(process.cwd(), 'netlify', 'functions', 'codes.json'), // functions/codes.json (less common)
+  ];
+
+  for (const p of tries) {
+    try {
+      if (fs.existsSync(p)) {
+        const raw = fs.readFileSync(p, 'utf8');
+        return JSON.parse(raw);
+      }
+    } catch (e) {
+      // ignore parse errors, try next
+      console.warn('Failed to parse codes.json at', p, e && e.message);
+    }
   }
-  if (!codesMap) {
-    try { codesMap = require('./codes.json'); } catch (e3) {}
-  }
-} catch (e) {
-  codesMap = null;
+  return null;
 }
+
+let codesMap = loadCodesJson();
 
 exports.handler = async function (event, context) {
   try {
     if (event.httpMethod !== 'POST') {
-      return { statusCode: 405, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ success: false, message: 'Method not allowed' }) };
+      return {
+        statusCode: 405,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ success: false, message: 'Method not allowed' })
+      };
     }
 
     let body = {};
@@ -32,14 +47,18 @@ exports.handler = async function (event, context) {
       return { statusCode: 400, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ success: false, message: 'No code provided' }) };
     }
 
+    // If codesMap not loaded yet (rare), try to reload
     if (!codesMap) {
-      // We keep behavior close to your original: require codes.json to exist
+      codesMap = loadCodesJson();
+    }
+
+    if (!codesMap) {
       return { statusCode: 500, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ success: false, message: 'Codes mapping not loaded' }) };
     }
 
     const entry = codesMap[code];
     if (!entry) {
-      // Keep your previous behavior: invalid code returns success:false, not incrementing Upstash
+      // preserve your previous behavior
       return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ success: false, message: 'Invalid product code' }) };
     }
 
@@ -67,14 +86,15 @@ exports.handler = async function (event, context) {
           }
         });
         const json = await resp.json();
-        if (json && typeof json.result !== 'undefined') count = Number(json.result);
+        if (json && typeof json.result !== 'undefined') {
+          count = Number(json.result);
+        }
       } catch (upErr) {
         console.warn('Upstash error:', upErr && (upErr.message || upErr));
-        // we do not abort entire response if Upstash fails; return product and count=null
+        // continue - we will return product with count=null
       }
     } else {
-      // Upstash not configured in environment — count will remain null
-      console.warn('Upstash environment variables not set; count will be null.');
+      console.warn('Upstash env vars not set; count will be null.');
     }
 
     return {
@@ -84,7 +104,7 @@ exports.handler = async function (event, context) {
     };
 
   } catch (err) {
-    console.error('verify function error:', err);
+    console.error('verify function fatal error:', err && err.stack ? err.stack : err);
     return {
       statusCode: 500,
       headers: { 'Content-Type': 'application/json' },
