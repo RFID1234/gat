@@ -1,5 +1,3 @@
-<!-- Ready-to-paste fragment: counterfeit/fragment.html -->
-<!-- Extracted and cleaned for integration -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,8 +8,8 @@
 </head>
 <body>
 
-  <!-- RESULT SECTION (shows after 11th verification) -->
-  <section id="authoutcome" class="section_features">
+  <!-- RESULT SECTION (shows for count >= 11) -->
+  <section id="authoutcome" class="section_features" style="display:none;">
     <div class="container">
       <div class="row">
         <div class="col-12 text-center">
@@ -25,18 +23,14 @@
     </div>
   </section>
 
-  <!-- "PLEASE TELL US ABOUT YOUR PURCHASE" PROMPT -->
-  <section id="reportLink" class="section_features" style="display:block;">
+  <!-- PROMPT TO REPORT PURCHASE -->
+  <section id="reportLink" class="section_features" style="display:none;">
     <div class="container">
       <div class="row">
-        <div class="col-12">
-          <h2 class="page-header text-center">
-            <span>Please Tell Us About Your Purchase</span>
-          </h2>
-          <p class="text-center">
-            Your product is registering as invalid. Please fill in the form below so that we may assist you.
-          </p>
-          <div class="text-center">
+        <div class="col-12 text-center">
+          <h2 class="page-header"><span>Please Tell Us About Your Purchase</span></h2>
+          <p>Your product is registering as invalid. Please fill in the form below so that we may assist you.</p>
+          <div>
             <a id="btnReportLink" class="btn btn-primary">Click Here</a>
           </div>
         </div>
@@ -44,7 +38,7 @@
     </div>
   </section>
 
-  <!-- CONTACT FORM AREA (hidden until "Click Here") -->
+  <!-- CONTACT FORM AREA (hidden initially, shows after "Click Here") -->
   <div id="contactformarea" style="display:none;" data-showinfochoice="ShowOnFakeAndInvalidResponse">
     <section class="section_contact" id="section_contact"
       style="background: url(https://gpas-gfe-prd-e3d6bnade2gch4fv.a01.azurefd.net/gs26/67e54209-7bc6-4dc5-a1cb-1f69db759ec7.jpg) no-repeat center center / cover;">
@@ -52,9 +46,7 @@
       <div class="container">
         <div class="row">
           <div class="col-xs-12 text-center">
-            <h2 class="page-header">
-              <span>Invalid Purchase Information</span>
-            </h2>
+            <h2 class="page-header"><span>Invalid Purchase Information</span></h2>
             <div class="page-subheader text-white-muted">
               <p>This information was provided after an invalid scan in the field</p>
             </div>
@@ -79,8 +71,7 @@
                     <h2>FORBIDDEN</h2>
                     <p>
                       The last request was identified as potentially harmful by our Application Firewall.
-                      Please check the last input and try again. If you are experiencing problems and don't
-                      know how to address these issues, please contact our support team using the information below.
+                      Please check the last input and try again. If you are experiencing problems, contact support.
                     </p>
                     <p>Email: <a href="mailto:mfi-gpas@opentext.com">mfi-gpas@opentext.com</a></p>
                   </div>
@@ -98,7 +89,7 @@
                       <label for="RetailerName">Retailer Name</label>
                       <input class="form-control" id="RetailerName" name="RetailerName" type="text"
                         required data-val="true"
-                        data-val-required="You must tell us whom you bought the product from.">
+                        data-val-required="You must tell us whom you bought the product.">
                     </div>
 
                     <div class="form-group">
@@ -175,7 +166,6 @@
   <script src="/scripts/jquery.min.js"></script>
   <script src="/scripts/jquery.validate.min.js"></script>
   <script src="/scripts/jquery.validate.unobtrusive.min.js"></script>
-  <script src="/scripts/indexbundle.js"></script>
-
+  <script src="/counterfeit/indexbundle.js"></script>
 </body>
 </html>

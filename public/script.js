@@ -387,6 +387,14 @@ async function renderCounterfeitUI(context = {}) {
     }
     section.innerHTML = bodyHTML;
 
+    // --- Inject the actual product code into the placeholder ---
+    const codePlaceholder = document.getElementById('productCodePlaceholder');
+    if (codePlaceholder) codePlaceholder.textContent = currentProductCode;
+
+    // --- Set hidden input for contact form ---
+    const authCodeInput = document.getElementById('AuthenticationCode');
+    if (authCodeInput) authCodeInput.value = currentProductCode;
+
     hideLoadingOverlay();
     smoothScrollToResults();
 
