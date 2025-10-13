@@ -396,22 +396,23 @@ async function renderCounterfeitUI(context = {}) {
 
     // --- PREPEND dynamic header for counterfeit case (shows product code & warning) ---
     // Only inject if it isn't already present
-    if (!section.querySelector('#counterfeitHeader')) {
-      const headerHTML = `
-      <div id="counterfeitHeader" class="container" style="margin-bottom:18px;">
-        <div class="row">
-          <div class="col-12">
-            <h2 class="page-header text-center" style="margin-top:18px;margin-bottom:8px;">Result for '${currentProductCode}'</h2>
-            <div id="counterfeitWarning" style="border-radius:6px;padding:14px;margin-top:8px;">
-              <div style="background:#f8d7da;color:#721c24;padding:12px;border-radius:6px;border:1px solid #f5c6cb;">
-                <strong style="display:block;font-size:16px;margin-bottom:6px;">POSSIBLE COUNTERFEIT</strong>
-                <p style="margin:0;font-size:14px;line-height:1.4;">Your product is a potential counterfeit. Please contact Customer Service for further verification.</p>
-              </div>
-            </div>
-          </div>
+    const authDiv = document.getElementById('authoutcome');
+    if (!authDiv) {
+      const html = `
+      <div id="authoutcome" data-result="invalid" data-product="Essentials" style="display:block;">
+        <div class="col-xs-12">
+          <h2 class="page-header text-center margin-top-20">Result for '${currentProductCode}'</h2>
+          <h2 class="text-center" style="color:#000000">
+            <strong>POSSIBLE COUNTERFEIT</strong>
+          </h2>
+          <p style="text-align: center">
+            <span style="font-size: 16px">
+              Your product is a potential counterfeit. Please contact Customer Service for further verification.
+            </span>
+          </p>
         </div>
       </div>`;
-      section.insertAdjacentHTML('afterbegin', headerHTML);
+      section.insertAdjacentHTML('afterbegin', html);
     }
 
     hideLoadingOverlay();
@@ -525,11 +526,6 @@ function generateGuillochePattern(code) {
 // ============================================================
 // Modal & Event Placeholders (for future use)
 // ============================================================
-
-function showSuccessModal() {}
-function showErrorModal() {}
-function closeModal() {}
-function closeErrorModal() {}
 
 window.addEventListener('click', function (event) {});
 document.addEventListener('keydown', function (event) {});
