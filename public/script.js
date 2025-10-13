@@ -367,7 +367,7 @@ async function renderCounterfeitUI(context = {}) {
     showLoadingOverlaySized();
 
     // load colleague styles + script (adjust names to actual files you placed)
-    await loadCSS('/counterfeit/counterfeitstyles.css').catch(()=>{});
+    await loadCSS('/counterfeit/counterfeitstyles.scoped.css').catch(()=>{});
     await loadJS('/counterfeit/counterfeitscript.js').catch(()=>{});
     await loadJS('/counterfeit/contacts.js').catch(()=>{});
     // NEW: load our init wiring for the form (must be loaded before calling it)
@@ -392,7 +392,7 @@ async function renderCounterfeitUI(context = {}) {
     }
 
     // Insert the colleague fragment
-    section.innerHTML = bodyHTML;
+    section.innerHTML = '<div id="cf-root">' + bodyHTML + '</div>';
 
     // --- PREPEND dynamic header for counterfeit case (shows product code & warning) ---
     // Only inject if it isn't already present
