@@ -9263,7 +9263,7 @@
     padding: 15px 30px;
     font-size: 15px;
     line-height: 1.7;
-    border-radius: 0;
+    border-radius: 25px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -13091,7 +13091,7 @@
 }
 
 #cf-root .page-header>span {
-    color: #ffab00
+    color: #114b9a !important
 }
 
 #cf-root .page-subheader {
@@ -13136,7 +13136,7 @@
 #cf-root .btn {
     border-color: transparent;
     font-family: 'Oswald',sans-serif;
-    font-size: 13px;
+    font-size: 12pt;
     text-transform: uppercase;
     letter-spacing: .05em;
     -webkit-transition: all .25s;

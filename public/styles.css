@@ -88,7 +88,7 @@
       Headings & Copy
       ========================= */
    .page-header {
-     color: #0b2141 !important;
+     color: #353535 !important;
      font-size: clamp(20px, 2.6vw, 36px);
      letter-spacing: 0.5px;
      text-transform: uppercase;
@@ -98,9 +98,10 @@
      margin-bottom: 18px;
    }
    .page-subheader p {
-     color: #333 !important;
+     color: #777 !important;
      font-weight: 400;
-     font-size: clamp(12px, 1.3vw, 16px);
+     font-size: 16px;
+     font-family: 'Roboto', sans-serif;
      letter-spacing: 0.2px;
      display:inline-block;
    }
@@ -200,7 +201,7 @@
       ========================= */
    
    /* Inline verification spacing/layout */
-   #authresponse .page-header { margin: 40px 0 22px; }
+   #authresponse .page-header { margin: 20px; font-size: 24pt;}
    #authresponse hr {
      border: 0;
      height: 1px;
@@ -369,7 +370,6 @@
    .text-center { text-align: center; }
    .authform { margin-bottom: 30px; }
    .field-validation-valid { display: none; }
-   .section_features { padding: 60px 0; }
    #authresponse { min-height: 0; padding: 0; }
    
    /* small override for preverify hide (updated UI uses .preverify-hidden) */

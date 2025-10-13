@@ -402,18 +402,17 @@ async function renderCounterfeitUI(context = {}) {
       <div id="authoutcome" data-result="invalid" data-product="Essentials" style="display:block;">
         <div class="col-xs-12">
           <h2 class="page-header text-center margin-top-20">Result for '${currentProductCode}'</h2>
-          <h2 class="text-center" style="color:#000000">
-            <strong>POSSIBLE COUNTERFEIT</strong>
+          <h2 class="text-center" style="font-size:32px; font-family:'Oswald', sans-serif;">
+            POSSIBLE COUNTERFEIT
           </h2>
-          <p style="text-align: center">
-            <span style="font-size: 16px">
-              Your product is a potential counterfeit. Please contact Customer Service for further verification.
-            </span>
+          <p class="text-center" style="font-size:16px; color:#777; font-family:'Roboto', sans-serif;">
+            Your product is a potential counterfeit. Please contact Customer Service for further verification.
           </p>
         </div>
       </div>`;
       section.insertAdjacentHTML('afterbegin', html);
     }
+
 
     hideLoadingOverlay();
     smoothScrollToResults();
