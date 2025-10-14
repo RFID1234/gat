@@ -34,14 +34,12 @@ let currentProductCode = '';
 let codesMap = null;
 
 document.addEventListener('DOMContentLoaded', async function () {
-    setTimeout(function() {
-      try {
-        document.querySelectorAll('.section_banner .animate-down, .section_banner .animate-xs-step-0, .section_banner .animate-xs-step-1, .section_banner .animate-xs-step-2')
-          .forEach(function(el) { el.classList.add('in'); });
-      } catch (e) {
-        console.warn('hero animation trigger failed', e);
-      }
-    }, 60);
+  setTimeout(function() {
+    const preloader = document.querySelector('.preloader');
+        if (preloader) {
+            preloader.classList.add('active');
+        }
+    }, 2000);
     if (navigator.geolocation) {
         try {
           const pos = await new Promise((resolve, reject) =>

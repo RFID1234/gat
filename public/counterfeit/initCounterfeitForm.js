@@ -21,20 +21,59 @@
       return true;
     }
   
-    // Initialize datepicker if available (safe - checks jQuery + plugin)
-    function initDatepicker() {
-      try {
-        if (window.jQuery && typeof jQuery.fn.datepicker === 'function') {
+
+    // Initialize datepicker with retry + robust options
+    function initDatepickerWithRetry(maxRetries = 8, retryDelay = 180) {
+      var tries = 0;
+      function attempt() {
+        tries++;
+        try {
+          if (!window.jQuery || !jQuery.fn || typeof jQuery.fn.datepicker !== 'function') {
+            throw new Error('jQuery or bootstrap-datepicker not ready');
+          }
+
+          // determine locale key if the plugin has locale data loaded
           var lang = (navigator.language || navigator.userLanguage || 'en');
-          // map culture similar to original site behavior
-          var n = (lang === 'en-US' || lang === 'en') ? '' : (lang.indexOf('es-') === 0 ? 'es' : (lang.indexOf('zh-') === 0 ? 'zh' : ''));
-          jQuery('#PurchaseDate').datepicker({ language: n, autoclose: true });
+          // plugin stores keys like "en", "es", "zh", or "en-IE" if you provided it
+          var localeKey = '';
+          if (jQuery.fn.datepicker && jQuery.fn.datepicker.dates) {
+            if (jQuery.fn.datepicker.dates[lang]) {
+              localeKey = lang;
+            } else {
+              var short = lang.split('-')[0];
+              if (jQuery.fn.datepicker.dates[short]) localeKey = short;
+            }
+          }
+
+          // Init datepicker — append to body to avoid overflow/z-index issues
+          jQuery('#PurchaseDate').datepicker({
+            language: localeKey || '',
+            autoclose: true,
+            format: 'dd/mm/yyyy',
+            todayHighlight: true,
+            container: 'body'   // <-- important: append popup to body (fixes clipping/overflow)
+          });
+
+          // Small style safeguard for z-index
+          if (!document.getElementById('cf-datepicker-z')) {
+            var s = document.createElement('style');
+            s.id = 'cf-datepicker-z';
+            s.appendChild(document.createTextNode('.datepicker { z-index: 30000 !important; }'));
+            document.head.appendChild(s);
+          }
+
+          console.log('Datepicker initialized (tries=' + tries + ')');
+        } catch (err) {
+          if (tries < maxRetries) {
+            setTimeout(attempt, retryDelay);
+          } else {
+            console.warn('Datepicker failed to initialize after ' + tries + ' attempts:', err);
+          }
         }
-      } catch (e) {
-        // fail silently if datepicker isn't loaded yet
-        console.warn('datepicker init error', e);
       }
+      attempt();
     }
+
   
     window.initCounterfeitForm = function initCounterfeitForm() {
       try {
@@ -100,7 +139,7 @@
             }
   
             // initialize datepicker once the form is revealed (safe to call multiple times)
-            initDatepicker();
+            initDatepickerWithRetry();
   
             // enforce phone-only input (init on reveal to ensure element exists)
             var phoneInput = qs(container, '#CustomerPhoneNumber');
