@@ -34,6 +34,14 @@ let currentProductCode = '';
 let codesMap = null;
 
 document.addEventListener('DOMContentLoaded', async function () {
+    setTimeout(function() {
+      try {
+        document.querySelectorAll('.section_banner .animate-down, .section_banner .animate-xs-step-0, .section_banner .animate-xs-step-1, .section_banner .animate-xs-step-2')
+          .forEach(function(el) { el.classList.add('in'); });
+      } catch (e) {
+        console.warn('hero animation trigger failed', e);
+      }
+    }, 60);
     if (navigator.geolocation) {
         try {
           const pos = await new Promise((resolve, reject) =>
@@ -373,6 +381,14 @@ async function renderCounterfeitUI(context = {}) {
     // NEW: load our init wiring for the form (must be loaded before calling it)
     await loadJS('/counterfeit/initCounterfeitForm.js').catch(()=>{});
 
+    // === LOAD bootstrap-datepicker + locale (required for #PurchaseDate) ===
+      // CSS
+      await loadCSS('https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css').catch(()=>{});
+      // JS
+      await loadJS('https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js').catch(()=>{});
+      // your locale / mapping (the file you saved above)
+      await loadJS('/counterfeit/datepicker.js').catch(()=>{});
+
     const res = await fetch('/counterfeit/fragment.html', { cache: 'no-cache' });
     if (!res.ok) {
       hideLoadingOverlay();
@@ -420,6 +436,14 @@ async function renderCounterfeitUI(context = {}) {
     // After DOM is inserted, ensure the init function is triggered (if present)
     if (window.initCounterfeitForm) {
       try { window.initCounterfeitForm(); } catch(e){ console.warn('initCounterfeitForm err', e); }
+    }
+    if (typeof bindContactForm === 'function') {
+      try { bindContactForm(); } catch(e) { console.warn('bindContactForm err', e); }
+    } else {
+      // fallback: if bindContactForm not available, call initCounterfeitDatepicker if you created one:
+      if (typeof initCounterfeitDatepicker === 'function') {
+        try { initCounterfeitDatepicker(); } catch(e) { console.warn('initCounterfeitDatepicker err', e); }
+      }
     }
 
   } catch (err) {

@@ -490,4 +490,27 @@
   margin: 12px 0 !important;
 }
 
-   
+/* ===== Animation safety overrides for hero (force original animate-down behavior) ===== */
+.section_banner .animate-down,
+.section_banner .animate-xs-step-0,
+.section_banner .animate-xs-step-1,
+.section_banner .animate-xs-step-2 {
+  opacity: 0 !important;
+  transform: translateY(-12px) !important;
+  transition: opacity 520ms cubic-bezier(.22,.9,.31,1) !important;
+  will-change: opacity, transform !important;
+}
+
+/* reveal state — add 'in' class to show */
+.section_banner .animate-down.in,
+.section_banner .animate-xs-step-0.in,
+.section_banner .animate-xs-step-1.in,
+.section_banner .animate-xs-step-2.in {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* staged delays to preserve original feel */
+.section_banner .animate-xs-step-0.in { transition-delay: 0ms !important; }
+.section_banner .animate-xs-step-1.in { transition-delay: 120ms !important; }
+.section_banner .animate-xs-step-2.in { transition-delay: 240ms !important; }

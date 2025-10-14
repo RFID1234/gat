@@ -35,7 +35,7 @@
 
 </section>
 <!-- Extracted element: section_contact -->
-<section class="section_contact" id="section_contact" style="background: url(https://gpas-gfe-prd-e3d6bnade2gch4fv.a01.azurefd.net/gs26/67e54209-7bc6-4dc5-a1cb-1f69db759ec7.jpg) no-repeat center center / cover">
+<section class="section_contact" id="section_contact" style="display:none; background: url(https://gpas-gfe-prd-e3d6bnade2gch4fv.a01.azurefd.net/gs26/67e54209-7bc6-4dc5-a1cb-1f69db759ec7.jpg) no-repeat center center / cover">
         <div class="container">
             <div class="row">
                 <div class="col-xs-12">
@@ -61,7 +61,7 @@
                                 <div class="alert alert-danger">
                                     <h2>FORBIDDEN</h2>
                                     <p>The last request was identified as potentially harmful by our Application Firewall. Please check the last input and try again. If you are experiencing problems and don&#x27;t know how to address these issues, please contact our support team using the information below.</p>
-                                    <p>Email: <a href='mailto:mfi-gpas@opentext.com'>mfi-gpas@opentext.com</a></p>"
+                                    <p>Email: <a href='mailto:mfi-gpas@opentext.com'>mfi-gpas@opentext.com</a></p>
                                 </div>
                             </div>
                             <div class="col-sm-8" id="contactFormContainer">
@@ -82,7 +82,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="" for="PurchaseDate">Date of Purchase</label>
-                                                <input class="form-control" data-date-autoclose="true" data-date-format="dd/mm/yyyy" data-provider="datepicker" data-val="true" data-val-required="You must tell us when you bought the product." id="PurchaseDate" name="PurchaseDate" type="text" value="" />
+                                                <input class="form-control" data-date-autoclose="true" data-date-format="dd/mm/yyyy" data-provider="datepicker" data-val="true" data-val-required="You must tell us when you bought the product." id="PurchaseDate" name="PurchaseDate" type="text" value="" inputmode="numeric"/>
                                                 <span class="help-block field-validation-valid" data-valmsg-for="PurchaseDate" data-valmsg-replace="true"></span>
                                             </div>
                                             <div class="form-group">
@@ -113,7 +113,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="" for="CustomerPhoneNumber">Phone Number</label>
-                                                <input class="form-control" data-val="true" data-val-length="The field Phone Number must be a string with a maximum length of 255." data-val-length-max="255" id="CustomerPhoneNumber" maxlength="255" name="CustomerPhoneNumber" type="text" value="" />
+                                                <input class="form-control" data-val="true" data-val-length="The field Phone Number must be a string with a maximum length of 255." data-val-length-max="255" id="CustomerPhoneNumber" maxlength="255" name="CustomerPhoneNumber" type="text" value="" inputmode="numeric" pattern="[0-9]*"/>
                                                 <span class="help-block field-validation-valid" data-valmsg-for="CustomerPhoneNumber" data-valmsg-replace="true"></span>
                                             </div>
                                             <div class="form-group">

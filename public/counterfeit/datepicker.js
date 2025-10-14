@@ -12,3 +12,20 @@
         format: "dd/mm/yyyy"
     }
 }(jQuery);
+
+// datepicker.js
+
+window.initCounterfeitDatepicker = function initCounterfeitDatepicker() {
+    // Example — adjust this part to your datepicker library
+    const input = document.querySelector('#PurchaseDate');
+    if (!input) return;
+  
+    // Example if you're using jQuery UI Datepicker:
+    $(input).datepicker({
+      dateFormat: 'dd/mm/yy',
+      changeMonth: true,
+      changeYear: true,
+      yearRange: '1900:2099'
+    });
+  };
+  

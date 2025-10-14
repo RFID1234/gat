@@ -21,6 +21,21 @@
       return true;
     }
   
+    // Initialize datepicker if available (safe - checks jQuery + plugin)
+    function initDatepicker() {
+      try {
+        if (window.jQuery && typeof jQuery.fn.datepicker === 'function') {
+          var lang = (navigator.language || navigator.userLanguage || 'en');
+          // map culture similar to original site behavior
+          var n = (lang === 'en-US' || lang === 'en') ? '' : (lang.indexOf('es-') === 0 ? 'es' : (lang.indexOf('zh-') === 0 ? 'zh' : ''));
+          jQuery('#PurchaseDate').datepicker({ language: n, autoclose: true });
+        }
+      } catch (e) {
+        // fail silently if datepicker isn't loaded yet
+        console.warn('datepicker init error', e);
+      }
+    }
+  
     window.initCounterfeitForm = function initCounterfeitForm() {
       try {
         var container = qs(document, '#authresponse') || document;
@@ -32,16 +47,35 @@
         var btnReportLink = qs(container, '#btnReportLink');
         var btnSubmit = qs(container, '#btnSubmitContact');
   
+        // NEW: reference to full contact section (hide/show & scroll target)
+        var sectionContact = qs(container, '#section_contact');
+  
         // Initially show report link, hide form and success/failure blocks
         if (reportSection) reportSection.style.display = 'block';
         if (formContainer) formContainer.style.display = 'none';
         if (successDiv) successDiv.style.display = 'none';
         if (failureDiv) failureDiv.style.display = 'none';
   
+        // Ensure the entire contact section is hidden initially (prevents premature visibility)
+        if (sectionContact) sectionContact.style.display = 'none';
+  
+        // setMsg: put message text AND make the validation span visible (CSS previously hid it)
         function setMsg(fieldId, msg) {
           if (!form) return;
+          // prefer the in-form span; fallback to container-level selector
           var span = form.querySelector('[data-valmsg-for="'+fieldId+'"]') || qs(container, '[data-valmsg-for="'+fieldId+'"]');
-          if (span) span.textContent = msg || '';
+          if (!span) return;
+          span.textContent = msg || '';
+          // make sure the message is visible even if CSS had .field-validation-valid {display:none;}
+          if (msg && msg.length) {
+            span.style.display = 'block';
+            span.classList.remove('field-validation-valid');
+            span.classList.add('field-validation-error');
+          } else {
+            span.style.display = 'none';
+            span.classList.remove('field-validation-error');
+            span.classList.add('field-validation-valid');
+          }
         }
   
         // Show the form when "Click Here" is pressed
@@ -54,6 +88,34 @@
               var first = formContainer.querySelector('input, textarea, select');
               if (first) try { first.focus(); } catch (e) {}
             }
+  
+            // reveal full contact section and scroll into view
+            if (sectionContact) {
+              try {
+                sectionContact.style.display = 'block';
+                sectionContact.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              } catch (e) {
+                try { window.scrollTo(0, sectionContact.offsetTop - 80); } catch(err){}
+              }
+            }
+  
+            // initialize datepicker once the form is revealed (safe to call multiple times)
+            initDatepicker();
+  
+            // enforce phone-only input (init on reveal to ensure element exists)
+            var phoneInput = qs(container, '#CustomerPhoneNumber');
+            if (phoneInput) {
+              phoneInput.setAttribute('inputmode','numeric');
+              phoneInput.setAttribute('pattern','[0-9]*');
+              // immediate clean in case value exists
+              phoneInput.value = (phoneInput.value || '').replace(/\D+/g,'');
+              phoneInput.addEventListener('input', function () {
+                var pos = this.selectionStart;
+                this.value = this.value.replace(/\D+/g,'');
+                try { this.setSelectionRange(pos, pos); } catch (e) {}
+              }, { passive: true });
+            }
+  
           }, { passive: false });
         }
   
@@ -61,14 +123,16 @@
   
         // Clear validation messages on input
         qsa(form, 'input, textarea, select').forEach(function (el) {
-          el.addEventListener('input', function () { setMsg(el.id, ''); }, { passive: true });
+          el.addEventListener('input', function () {
+            setMsg(el.id, '');
+          }, { passive: true });
         });
   
         // Form submit handler
         form.addEventListener('submit', function (ev) {
           ev.preventDefault();
   
-          ['RetailerName','RetailerLocation','PurchaseDate','Product','CustomerEmail'].forEach(function(n){ setMsg(n,''); });
+          ['RetailerName','RetailerLocation','PurchaseDate','Product','CustomerEmail','CustomerPhoneNumber'].forEach(function(n){ setMsg(n,''); });
   
           function val(id){ var el = form.querySelector('#' + id); return el ? (String(el.value || '').trim()) : ''; }
   
@@ -77,6 +141,7 @@
           var purchaseDate = val('PurchaseDate');
           var product = val('Product');
           var email = val('CustomerEmail');
+          var phone = val('CustomerPhoneNumber');
   
           var ok = true;
           if (!retailer) { setMsg('RetailerName', 'You must tell us (whom/where/when) you bought the product'); ok = false; }
@@ -87,12 +152,15 @@
           var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!email || !emailRe.test(email)) { setMsg('CustomerEmail', 'Email is not valid.'); ok = false; }
   
+          // phone optional? If required, validate digits-only and a min length (example 7)
+          if (phone && !/^\d+$/.test(phone)) { setMsg('CustomerPhoneNumber', 'Phone number must contain digits only.'); ok = false; }
+  
           if (purchaseDate && !isValidDateDMY(purchaseDate)) {
             setMsg('PurchaseDate', 'Date must be in dd/mm/yyyy format.'); ok = false;
           }
   
           if (!ok) {
-            var firstInvalid = ['RetailerName','RetailerLocation','PurchaseDate','Product','CustomerEmail'].find(function(id){
+            var firstInvalid = ['RetailerName','RetailerLocation','PurchaseDate','Product','CustomerEmail','CustomerPhoneNumber'].find(function(id){
               var sp = form.querySelector('[data-valmsg-for="'+id+'"]');
               return sp && sp.textContent && sp.textContent.length > 0;
             });
