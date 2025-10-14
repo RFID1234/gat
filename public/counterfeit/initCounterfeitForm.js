@@ -144,9 +144,9 @@
           var phone = val('CustomerPhoneNumber');
   
           var ok = true;
-          if (!retailer) { setMsg('RetailerName', 'You must tell us (whom/where/when) you bought the product'); ok = false; }
-          if (!location) { setMsg('RetailerLocation', 'You must tell us (whom/where/when) you bought the product'); ok = false; }
-          if (!purchaseDate) { setMsg('PurchaseDate', 'You must tell us (whom/where/when) you bought the product'); ok = false; }
+          if (!retailer) { setMsg('RetailerName', 'You must tell us whom you bought the product from.'); ok = false; }
+          if (!location) { setMsg('RetailerLocation', 'You must tell us where you bought the product.'); ok = false; }
+          if (!purchaseDate) { setMsg('PurchaseDate', 'You must tell us when you bought the product.'); ok = false; }
           if (!product) { setMsg('Product', 'You must tell us what it was that you bought.'); ok = false; }
   
           var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -158,6 +158,21 @@
           if (purchaseDate && !isValidDateDMY(purchaseDate)) {
             setMsg('PurchaseDate', 'Date must be in dd/mm/yyyy format.'); ok = false;
           }
+
+          // require hcaptcha response on client (simple UX-only check)
+            var captchaToken = '';
+            var captchaTextarea = form.querySelector('textarea[name="h-captcha-response"], textarea[id^="h-captcha-response"], textarea[name="g-recaptcha-response"]');
+            if (captchaTextarea) captchaToken = String(captchaTextarea.value || '').trim();
+
+            if (!captchaToken) {
+            var capSpan = qs(container, '#captchaError') || qs(form, '#captchaError');
+            if (capSpan) capSpan.style.display = 'block';
+            ok = false;
+            } else {
+            var capSpan = qs(container, '#captchaError') || qs(form, '#captchaError');
+            if (capSpan) capSpan.style.display = 'none';
+            }
+
   
           if (!ok) {
             var firstInvalid = ['RetailerName','RetailerLocation','PurchaseDate','Product','CustomerEmail','CustomerPhoneNumber'].find(function(id){
@@ -175,17 +190,28 @@
           if (btnSubmit) { origBtnText = btnSubmit.textContent; btnSubmit.setAttribute('disabled','disabled'); btnSubmit.textContent = 'Submitting...'; }
   
           // Show green in-page success block after submission
-          setTimeout(function () {
-            try { form.style.display = 'none'; } catch (e) {}
-            if (successDiv) {
-              successDiv.innerHTML = `
-                <div style="background:#e9f7ec;border-left:6px solid #28a745;color:#155724;padding:16px;border-radius:6px;">
-                  <h2 style="margin:0 0 6px;font-size:18px;color:#155724">Information submitted successfully.</h2>
-                  <p style="margin:0;color:#155724">Thank you for taking the time to supply this information. We really appreciate it.</p>
-                </div>`;
-              successDiv.style.display = 'block';
-            }
-          }, 450);
+setTimeout(function () {
+    try { 
+      // hide the form
+      form.style.display = 'none'; 
+    } catch (e) {}
+  
+    if (successDiv) {
+      successDiv.innerHTML = `
+        <div class="alert alert-success">
+          <h2>Information submitted successfully.</h2>
+          <p>Thank you for taking the time to supply this information. We really appreciate it.</p>
+        </div>`;
+      
+      // ensure visible (removes any inline hidden styles)
+      successDiv.style.display = 'block';
+    }
+  
+    // scroll into view nicely
+    try {
+      successDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } catch(e){}
+  }, 450);
   
           setTimeout(function () {
             if (btnSubmit) { btnSubmit.removeAttribute('disabled'); btnSubmit.textContent = origBtnText || 'Submit'; }

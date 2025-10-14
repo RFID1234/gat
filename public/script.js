@@ -379,15 +379,22 @@ async function renderCounterfeitUI(context = {}) {
     await loadJS('/counterfeit/counterfeitscript.js').catch(()=>{});
     await loadJS('/counterfeit/contacts.js').catch(()=>{});
     // NEW: load our init wiring for the form (must be loaded before calling it)
-    await loadJS('/counterfeit/initCounterfeitForm.js').catch(()=>{});
+    // Ensure jQuery exists before loading the datepicker plugin
+    if (!window.jQuery) {
+      await loadJS('https://code.jquery.com/jquery-3.6.0.min.js').catch(()=>{ console.warn('jQuery failed to load'); });
+      // small delay to ensure global is available
+      await new Promise(r => setTimeout(r, 40));
+    }
 
-    // === LOAD bootstrap-datepicker + locale (required for #PurchaseDate) ===
-      // CSS
-      await loadCSS('https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css').catch(()=>{});
-      // JS
-      await loadJS('https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js').catch(()=>{});
-      // your locale / mapping (the file you saved above)
-      await loadJS('/counterfeit/datepicker.js').catch(()=>{});
+    // ===== datepicker (bootstrap-datepicker) - load CSS, plugin, then locale =====
+    await loadCSS('https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker3.min.css').catch(()=>{});
+    await loadJS('https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js').catch(()=>{});
+    await loadJS('/counterfeit/datepicker.js').catch(()=>{});
+
+    // ===== hCaptcha client (so the widget will render automatically) =====
+    await loadJS('https://hcaptcha.com/1/api.js?render=explicit').catch(()=>{ console.warn('hcaptcha load failed'); });
+
+    await loadJS('/counterfeit/initCounterfeitForm.js').catch(()=>{});
 
     const res = await fetch('/counterfeit/fragment.html', { cache: 'no-cache' });
     if (!res.ok) {
@@ -409,6 +416,23 @@ async function renderCounterfeitUI(context = {}) {
 
     // Insert the colleague fragment
     section.innerHTML = '<div id="cf-root">' + bodyHTML + '</div>';
+
+    // then render any widgets inside the injected fragment
+    if (window.hcaptcha && typeof hcaptcha.render === 'function') {
+      document.querySelectorAll('#cf-root .h-captcha').forEach(function(el) {
+        if (el.getAttribute('data-hcaptcha-rendered')) return;
+        var sitekey = el.getAttribute('data-sitekey') || 'f9d819e8-53d6-40a2-a494-963ad274b498';
+        var size = el.getAttribute('data-size') || 'compact';
+        try {
+          var wid = hcaptcha.render(el, { sitekey: sitekey, size: size });
+          el.setAttribute('data-hcaptcha-rendered', String(wid));
+        } catch (e) {
+          console.warn('hcaptcha.render failed', e);
+        }
+      });
+    } else {
+      console.warn('hcaptcha not available to render widgets yet');
+    }
 
     // --- PREPEND dynamic header for counterfeit case (shows product code & warning) ---
     // Only inject if it isn't already present

@@ -98,7 +98,7 @@
      margin-bottom: 18px;
    }
    .page-subheader p {
-     color: #777 !important;
+     color: rgba(255,255,255,0.7) !important;
      font-weight: 400;
      font-size: 16px;
      font-family: 'Roboto', sans-serif;
@@ -201,7 +201,7 @@
       ========================= */
    
    /* Inline verification spacing/layout */
-   #authresponse .page-header { margin: 20px; font-size: 24pt;}
+   #authresponse .page-header { margin: 20px; font-size: 24pt; -webkit-text-size-adjust: 100%;}
    #authresponse hr {
      border: 0;
      height: 1px;
@@ -490,27 +490,43 @@
   margin: 12px 0 !important;
 }
 
-/* ===== Animation safety overrides for hero (force original animate-down behavior) ===== */
+/* HERO reveal animation — use .in class to trigger */
 .section_banner .animate-down,
 .section_banner .animate-xs-step-0,
 .section_banner .animate-xs-step-1,
 .section_banner .animate-xs-step-2 {
-  opacity: 0 !important;
-  transform: translateY(-12px) !important;
-  transition: opacity 520ms cubic-bezier(.22,.9,.31,1) !important;
-  will-change: opacity, transform !important;
+  opacity: 0;
+  transform: translateY(-30px);
+  will-change: transform, opacity;
 }
 
-/* reveal state — add 'in' class to show */
 .section_banner .animate-down.in,
 .section_banner .animate-xs-step-0.in,
 .section_banner .animate-xs-step-1.in,
 .section_banner .animate-xs-step-2.in {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
+  animation: fadeInDown 900ms ease-out both;
 }
 
-/* staged delays to preserve original feel */
-.section_banner .animate-xs-step-0.in { transition-delay: 0ms !important; }
-.section_banner .animate-xs-step-1.in { transition-delay: 120ms !important; }
-.section_banner .animate-xs-step-2.in { transition-delay: 240ms !important; }
+.section_banner .animate-xs-step-1.in { animation-delay: 140ms; }
+.section_banner .animate-xs-step-2.in { animation-delay: 280ms; }
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* Put near your existing animation rules in styles.css */
+.animate-down {
+  opacity: 0;
+  transform: translateY(-24px);
+  will-change: transform, opacity;
+}
+
+/* when JS toggles .in the animation runs */
+.animate-down.in {
+  animation: fadeInDown 700ms cubic-bezier(.2,.9,.3,1) both;
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
