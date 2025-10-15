@@ -51,12 +51,33 @@ document.addEventListener('DOMContentLoaded', async function () {
     // Use a small margin, hide after ~2600-3000ms
     setTimeout(()=> {
       try { pre.style.display = 'none'; pre.classList.remove('active'); } catch(e){}
-      console.log('preloader hidden after animation');
+
+      try {
+        const heroEls = document.querySelectorAll('.section_banner .animate-down, .section_banner .animate-xs-step-0, .section_banner .animate-xs-step-1, .section_banner .animate-xs-step-2');
+        heroEls.forEach(el => {
+          // ensure element is visible (defensive)
+          el.style.display = '';
+          el.classList.add('in');
+          // remove any inline hiding
+          el.style.visibility = 'visible';
+          el.style.opacity = '1';
+        });
+  
+        // If verify button was hidden earlier, restore it
+        const btn = document.querySelector('.verify-btn, .authbutton');
+        if (btn) {
+          btn.style.display = '';
+          btn.style.opacity = '1';
+        }
+      } catch (err) {
+        console.warn('hero reveal error', err);
+      }
+      console.log('preloader hidden and hero reveal');
     }, 2800);
   })();
     function ensureContentAboveFooter() {
       var footer = document.querySelector('.section_footer');
-      var pad = (footer ? footer.offsetHeight : 56) + 20;
+      var pad = (footer ? footer.offsetHeight : 56) + 0;
       document.body.style.paddingBottom = pad + 'px';
     }
     window.addEventListener('DOMContentLoaded', ensureContentAboveFooter);

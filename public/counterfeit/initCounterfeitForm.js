@@ -56,28 +56,27 @@
           if (!document.getElementById('cf-datepicker-z')) {
             var s = document.createElement('style');
             s.id = 'cf-datepicker-z';
-            s.appendChild(document.createTextNode('.datepicker { z-index: 30000 !important; }'));
+            s.appendChild(document.createTextNode('.datepicker { z-index: 99999 !important; }'));
             document.head.appendChild(s);
           }
 
-          // When datepicker is shown, nudge its position after plugin set its own position
+          // Reposition whenever datepicker becomes visible
           jQuery('#PurchaseDate').off('.cfDateFix').on('show.cfDateFix', function () {
             setTimeout(function () {
-              var $dp = jQuery('.datepicker');
+              var $dp = jQuery('.datepicker:visible');
               var $inp = jQuery('#PurchaseDate');
               if (!$dp.length || !$inp.length) return;
               var inp = $inp[0];
               var rect = inp.getBoundingClientRect();
-              var desiredTop = rect.top + window.pageYOffset + inp.offsetHeight;
-              var desiredLeft = rect.left + window.pageXOffset;
-              // only adjust if it's way off
-              var currentTop = parseFloat($dp.css('top')) || 0;
-              var currentLeft = parseFloat($dp.css('left')) || 0;
-              if (Math.abs(currentTop - desiredTop) > 4 || Math.abs(currentLeft - desiredLeft) > 4) {
-                $dp.css({ top: desiredTop + 'px', left: desiredLeft + 'px' });
-              }
+              $dp.css({
+                position: 'absolute',
+                top: (rect.top + window.pageYOffset + inp.offsetHeight) + 'px',
+                left: (rect.left + window.pageXOffset) + 'px',
+                zIndex: 99999
+              });
             }, 10);
           });
+
 
           // Also reposition on window resize/scroll while open
           function repositionIfOpen() {
@@ -298,4 +297,3 @@ setTimeout(function () {
   
     // NO auto-run here: main script will call window.initCounterfeitForm() after injecting fragment
   })();
-  
