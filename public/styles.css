@@ -3,7 +3,99 @@
    Combines: deployed (production) + updated UI (colleague)
    Updated UI rules come *after* base/deployment pieces so they override.
    ======================================================== */
+/* Styles for animation*/
+  .preloader,.preloader__spinner {
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0
+  }
 
+  .preloader {
+      position: fixed;
+      background: rgba(255,255,255,.9);
+      overflow: hidden;
+      z-index: 999998;
+      -webkit-transition: opacity .5s;
+      transition: opacity .5s;
+      -webkit-transition-delay: 2s;
+      transition-delay: 2s
+  }
+
+  .preloader__spinner {
+      position: absolute;
+      margin: auto;
+      z-index: 999999;
+      -webkit-transition: opacity .5s;
+      transition: opacity .5s;
+      -webkit-animation: spinnerAnimation 1s ease-in-out infinite;
+      animation: spinnerAnimation 1s ease-in-out infinite
+  }
+
+  @-webkit-keyframes spinnerAnimation {
+      from {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg)
+      }
+
+      to {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg)
+      }
+  }
+
+  @keyframes spinnerAnimation {
+      from {
+          -webkit-transform: rotate(0deg);
+          transform: rotate(0deg)
+      }
+
+      to {
+          -webkit-transform: rotate(360deg);
+          transform: rotate(360deg)
+      }
+  }
+
+  .preloader::before,.preloader::after {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 200%;
+      height: 50%;
+      left: -50%;
+      background: #252525;
+      -webkit-transition: all 1s ease-in;
+      transition: all 1s ease-in;
+      -webkit-transition-delay: 1s;
+      transition-delay: 1s
+  }
+
+  .preloader:before {
+      top: 0;
+      -webkit-transform-origin: right top;
+      transform-origin: right top
+  }
+
+  .preloader:after {
+      bottom: 0;
+      -webkit-transform-origin: left bottom;
+      transform-origin: left bottom
+  }
+
+  .preloader.active {
+      opacity: 0
+  }
+
+  .preloader.active .preloader__spinner {
+      -webkit-animation-play-state: paused;
+      animation-play-state: paused;
+      opacity: 0
+  }
+
+  .preloader.active:before,.preloader.active:after {
+      -webkit-transform: scaleY(0) rotate(25deg);
+      transform: scaleY(0) rotate(25deg)
+  }
 /* =========================
    Reset & Base
    ========================= */
@@ -432,7 +524,6 @@
    }
    
    @media (max-width: 480px) {
-     .page-header { font-size:20px !important; line-height:1.1; }
      .bigtext { font-size:24px !important; letter-spacing:0.5px; }
      .btn-primary { padding:12px 25px; font-size:12px; }
      .modal-content { padding:20px 15px; margin:5px; }
@@ -445,7 +536,6 @@
    
    /* tiny screens */
    @media (max-width: 360px) {
-     .page-header { font-size:18px !important; }
      .bigtext { font-size:20px !important; }
      .btn-primary { padding:10px 20px; font-size:11px; }
      .guilloche-pattern { width:140px; height:140px; }
@@ -510,10 +600,6 @@
 .section_banner .animate-xs-step-1.in { animation-delay: 140ms; }
 .section_banner .animate-xs-step-2.in { animation-delay: 280ms; }
 
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-30px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
 /* Put near your existing animation rules in styles.css */
 .animate-down {
   opacity: 0;

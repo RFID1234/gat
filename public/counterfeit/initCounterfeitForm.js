@@ -20,10 +20,8 @@
       if (d < 1 || d > mdays[mo-1]) return false;
       return true;
     }
-  
-
-    // Initialize datepicker with retry + robust options
-    function initDatepickerWithRetry(maxRetries = 8, retryDelay = 180) {
+    // Robust datepicker initializer — paste near top of initCounterfeitForm.js
+    window.initDatepickerWithRetry = function initDatepickerWithRetry(maxRetries = 10, retryDelay = 150) {
       var tries = 0;
       function attempt() {
         tries++;
@@ -34,7 +32,6 @@
 
           // determine locale key if the plugin has locale data loaded
           var lang = (navigator.language || navigator.userLanguage || 'en');
-          // plugin stores keys like "en", "es", "zh", or "en-IE" if you provided it
           var localeKey = '';
           if (jQuery.fn.datepicker && jQuery.fn.datepicker.dates) {
             if (jQuery.fn.datepicker.dates[lang]) {
@@ -45,22 +42,54 @@
             }
           }
 
-          // Init datepicker — append to body to avoid overflow/z-index issues
+          // Initialize datepicker appended to body (avoid clipping) and prefer top if needed
           jQuery('#PurchaseDate').datepicker({
             language: localeKey || '',
             autoclose: true,
             format: 'dd/mm/yyyy',
             todayHighlight: true,
-            container: 'body'   // <-- important: append popup to body (fixes clipping/overflow)
+            container: 'body',
+            orientation: 'auto top'
           });
 
-          // Small style safeguard for z-index
+          // ensure z-index so it sits above overlays
           if (!document.getElementById('cf-datepicker-z')) {
             var s = document.createElement('style');
             s.id = 'cf-datepicker-z';
             s.appendChild(document.createTextNode('.datepicker { z-index: 30000 !important; }'));
             document.head.appendChild(s);
           }
+
+          // When datepicker is shown, nudge its position after plugin set its own position
+          jQuery('#PurchaseDate').off('.cfDateFix').on('show.cfDateFix', function () {
+            setTimeout(function () {
+              var $dp = jQuery('.datepicker');
+              var $inp = jQuery('#PurchaseDate');
+              if (!$dp.length || !$inp.length) return;
+              var inp = $inp[0];
+              var rect = inp.getBoundingClientRect();
+              var desiredTop = rect.top + window.pageYOffset + inp.offsetHeight;
+              var desiredLeft = rect.left + window.pageXOffset;
+              // only adjust if it's way off
+              var currentTop = parseFloat($dp.css('top')) || 0;
+              var currentLeft = parseFloat($dp.css('left')) || 0;
+              if (Math.abs(currentTop - desiredTop) > 4 || Math.abs(currentLeft - desiredLeft) > 4) {
+                $dp.css({ top: desiredTop + 'px', left: desiredLeft + 'px' });
+              }
+            }, 10);
+          });
+
+          // Also reposition on window resize/scroll while open
+          function repositionIfOpen() {
+            var $dp = jQuery('.datepicker:visible');
+            var $inp = jQuery('#PurchaseDate');
+            if (!$dp.length || !$inp.length) return;
+            var inp = $inp[0];
+            var rect = inp.getBoundingClientRect();
+            $dp.css({ top: (rect.top + window.pageYOffset + inp.offsetHeight) + 'px', left: (rect.left + window.pageXOffset) + 'px' });
+          }
+          window.addEventListener('resize', repositionIfOpen);
+          window.addEventListener('scroll', repositionIfOpen);
 
           console.log('Datepicker initialized (tries=' + tries + ')');
         } catch (err) {
@@ -72,7 +101,7 @@
         }
       }
       attempt();
-    }
+    };
 
   
     window.initCounterfeitForm = function initCounterfeitForm() {
@@ -138,8 +167,12 @@
               }
             }
   
-            // initialize datepicker once the form is revealed (safe to call multiple times)
-            initDatepickerWithRetry();
+            if (typeof window.initDatepickerWithRetry === 'function') {
+              try { window.initDatepickerWithRetry(); } catch(e) { console.warn('initDatepickerWithRetry err', e); }
+            } else {
+              try { initDatepicker(); } catch(e) {}
+            }
+            
   
             // enforce phone-only input (init on reveal to ensure element exists)
             var phoneInput = qs(container, '#CustomerPhoneNumber');

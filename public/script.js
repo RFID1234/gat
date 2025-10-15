@@ -34,14 +34,33 @@ let currentProductCode = '';
 let codesMap = null;
 
 document.addEventListener('DOMContentLoaded', async function () {
-    setTimeout(function() {
-      try {
-        document.querySelectorAll('.section_banner .animate-down, .section_banner .animate-xs-step-0, .section_banner .animate-xs-step-1, .section_banner .animate-xs-step-2')
-          .forEach(function(el) { el.classList.add('in'); });
-      } catch (e) {
-        console.warn('hero animation trigger failed', e);
-      }
-    }, 60);
+  (function(){
+    const pre = document.querySelector('.preloader') || document.getElementById('site-preloader');
+    if (!pre) { console.warn('preloader not found'); return; }
+  
+    // Ensure visible at start
+    pre.style.display = '';
+    // Add active after a short tick to begin the hide animation (OG site adds .active to animate away)
+    setTimeout(()=> {
+      pre.classList.add('active'); // this drives opacity -> 0 and pseudo-element transforms
+    }, 80);
+  
+    // Remove from flow after animation completes. CSS transition-delay/op timings:
+    // - pseudo elements have 1s delay + 1s transition (total ~2s)
+    // - preloader opacity transition has delay 2s -> 0.5s transition (so end ~2.5s)
+    // Use a small margin, hide after ~2600-3000ms
+    setTimeout(()=> {
+      try { pre.style.display = 'none'; pre.classList.remove('active'); } catch(e){}
+      console.log('preloader hidden after animation');
+    }, 2800);
+  })();
+    function ensureContentAboveFooter() {
+      var footer = document.querySelector('.section_footer');
+      var pad = (footer ? footer.offsetHeight : 56) + 20;
+      document.body.style.paddingBottom = pad + 'px';
+    }
+    window.addEventListener('DOMContentLoaded', ensureContentAboveFooter);
+    window.addEventListener('resize', ensureContentAboveFooter);
     if (navigator.geolocation) {
         try {
           const pos = await new Promise((resolve, reject) =>
@@ -416,6 +435,18 @@ async function renderCounterfeitUI(context = {}) {
 
     // Insert the colleague fragment
     section.innerHTML = '<div id="cf-root">' + bodyHTML + '</div>';
+    
+    try {
+      // init datepicker robustly (works if plugin loaded)
+      if (typeof window.initDatepickerWithRetry === 'function') {
+        try { window.initDatepickerWithRetry(); } catch (e) { console.warn('initDatepickerWithRetry err', e); }
+      } else {
+        // fallback: try calling the simple initializer if present
+        if (typeof initDatepicker === 'function') {
+          try { initDatepicker(); } catch(e) { console.warn('initDatepicker err', e); }
+        }
+      }
+    } catch(e) {}
 
     // then render any widgets inside the injected fragment
     if (window.hcaptcha && typeof hcaptcha.render === 'function') {
