@@ -63,12 +63,7 @@ document.addEventListener('DOMContentLoaded', async function () {
           el.style.opacity = '1';
         });
   
-        // If verify button was hidden earlier, restore it
-        const btn = document.querySelector('.verify-btn, .authbutton');
-        if (btn) {
-          btn.style.display = '';
-          btn.style.opacity = '1';
-        }
+        // Button should remain hidden after verification
       } catch (err) {
         console.warn('hero reveal error', err);
       }
@@ -126,7 +121,18 @@ const autoVerify = (urlParams.get('auto') || '') === '1';
       btn.style.cursor = 'pointer';
       btn.addEventListener('click', function (e) {
         e.preventDefault();
+        // Hide the button
         this.style.display = 'none';
+        // Hide the product code display
+        const codeDisplay = document.getElementById('productCodeDisplay');
+        if (codeDisplay) {
+          codeDisplay.style.display = 'none';
+        }
+        // Hide the code underline
+        const codeUnderline = document.querySelector('.code-underline');
+        if (codeUnderline) {
+          codeUnderline.style.display = 'none';
+        }
         smoothScrollToResults();
         setTimeout(() => {
           showLoadingOverlaySized();
@@ -140,6 +146,16 @@ const autoVerify = (urlParams.get('auto') || '') === '1';
   if (currentProductCode && autoVerify) {
     const firstBtn = document.querySelector('.verify-btn, .authbutton');
     if (firstBtn) firstBtn.style.display = 'none';
+    // Hide the product code display
+    const codeDisplay = document.getElementById('productCodeDisplay');
+    if (codeDisplay) {
+      codeDisplay.style.display = 'none';
+    }
+    // Hide the code underline
+    const codeUnderline = document.querySelector('.code-underline');
+    if (codeUnderline) {
+      codeUnderline.style.display = 'none';
+    }
     smoothScrollToResults();
     setTimeout(() => {
       showLoadingOverlaySized();
@@ -220,7 +236,7 @@ function renderInlineSuccess(product) {
         </div>
         <div class="col-sm-12"><hr></div>
         <div class="col-sm-12">
-          <h2 class="page-header text-center" style="margin-top:10px;margin-bottom:18px;"><span>Product Details</span></h2>
+          <h2 class="page-header text-center" style="margin-top:10px;margin-bottom:18px;"><span style="color: #114b9a;">Product Details</span></h2>
         </div>
         <div class="col-sm-12 left-align" style="margin-bottom:16px;">
           <a href="https://gatsport.com/collections/essentials" target="_blank" id="moreInfoBtn" class="btn btn-primary">More product information</a>
@@ -242,13 +258,7 @@ function renderInlineSuccess(product) {
   
     // ensure overlay is gone and the button restored
     hideLoadingOverlay();
-    const btn = document.querySelector('.verify-btn, .authbutton');
-    if (btn) {
-      btn.style.opacity = '1';
-      btn.textContent = 'VERIFY MY PRODUCT';
-      // make sure button is visible again if you hid it earlier
-      btn.style.display = '';
-    }
+    // Button should remain hidden after verification
   
     // smooth scroll the results into view
     smoothScrollToResults();
@@ -314,11 +324,7 @@ function renderInlineError(message) {
   </div>
 </div>`;
   hideLoadingOverlay();
-  const btn = document.querySelector('.verify-btn, .authbutton');
-  if (btn) {
-    btn.style.opacity = '1';
-    btn.textContent = 'VERIFY MY PRODUCT';
-  }
+  // Button should remain hidden after verification
   smoothScrollToResults();
     // --- reveal hidden sections after successful verification ---
 
@@ -498,7 +504,7 @@ async function renderCounterfeitUI(context = {}) {
             POSSIBLE COUNTERFEIT
           </h2>
           <p class="text-center" style="font-size:16px; color:#777; font-family:'Roboto', sans-serif;">
-            Your product is a potential counterfeit. Please contact Customer Service for further verification.
+            Your product is a potential counterfeit. Please contact <span class="fake-link" title="info@teamgat.com">Customer Service</span> for further verification.
           </p>
         </div>
       </div>`;
